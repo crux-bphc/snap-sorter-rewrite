@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        .image-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Responsive grid */
+            gap: 10px; /* Space between images */
+        }
+        .image-container img {
+            width: 100%; /* Make images fill their container */
+            height: auto; /* Maintain original aspect ratio */
+            border-radius: 5px; /* Optional: rounded corners for images */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: shadow effect */
+        }
+    </style>
+</head>
+<body>
+    <h1>Found Images</h1>
+    <div class="image-container">
+        {% for image in image_names %}
+            <div>
+                <img src="{{ image }}" alt="Found Image">
+            </div>
+        {% endfor %}
+    </div>
+    <a href="{{ url_for('index') }}">Upload another image</a>
+</body>
+</html>
