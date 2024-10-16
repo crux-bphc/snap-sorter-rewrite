@@ -4,16 +4,6 @@ import os
 
 
 class FaceDetector:
-    '''
-    FaceDetector class to detect all faces in images in a given directory
-
-    args:
-        directory: str: path to the directory containing images
-        save_directory: str: path to the directory to save the cropped faces
-    
-    returns:
-        None
-    '''
     def __init__(self):
         print("FaceDetector object initializing")
         self.detector = mtcnn.MTCNN()
@@ -43,6 +33,14 @@ class FaceDetector:
                     print(f"Face {i} in {image} with confidence {confidence:.2f} saved successfully")
 
     def save_cropped_face(self, image_path, save_path):
+        """
+        Detect the first face and save its cropped version to the specified directory.
+        This is used during inference.
+
+        Args:
+            image_path: path of the image
+            save_path: directory where the cropped face will be saved
+        """
         img = cv2.imread(image_path)
         face = self.detector.detect_faces(img)
         print(f"Detected {len(face)} faces in {image_path}")

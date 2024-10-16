@@ -8,6 +8,11 @@ USER_IMG_SAVE_PATH = r"inferencing"
 
 class Inferencer():
     def __init__(self, use_pca=False, pca_save_dir=None):
+        """
+        use_pca: Whether to use PCA reduced embeddings or not
+        pca_save_dir: Directory to saved PCA model
+        """
+
         print("Loading FaceDetector and EmbeddingGenerator")
         self.facedectector_model = FaceDetector()
         self.embedding_model = EmbeddingGenerator(use_pca=use_pca, pca_save_dir=pca_save_dir)
@@ -23,6 +28,14 @@ class Inferencer():
             self.dataset_embeddings = np.load("embeddings/embeddings.npy")
 
     def process_image(self):
+        """
+        Detect and extract user face from image. The cropped face is saved in the same directory as the input image
+        and will be deleted after inference.
+
+        Returns:
+            Path of cropped face
+        """
+
         print("Cropping and saving user face")
         try:
             cropped_face_path = self.facedectector_model.save_cropped_face(USER_IMG_PATH, USER_IMG_SAVE_PATH)
@@ -32,6 +45,16 @@ class Inferencer():
             return None
         
     def find_cluster(self, cropped_face_path):
+        """
+        Generates embedding for user face and finds the cluster to which the user face belongs by comparing distance
+
+        Args:
+            cropped_face_path: Path of cropped face
+        
+        Returns:
+            images which contain the user face
+        """
+
         print("Generating embedding for user face")
         user_face_embedding = self.embedding_model.inference_embedding(cropped_face_path)
         os.remove(cropped_face_path)
@@ -66,5 +89,8 @@ class Inferencer():
             return image_name
         
     def delete_test_image(self):
+        """
+        Delete the test image after inference
+        """
         os.remove(USER_IMG_PATH)
 

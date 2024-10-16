@@ -11,6 +11,12 @@ from sklearn.decomposition import PCA
 
 class EmbeddingGenerator():
     def __init__(self, n_components = 50, use_pca=False, pca_save_dir=None):
+        """
+        n_components: Number of components to keep during PCA
+        use_pca: Whether to use PCA or not
+        pca_save_dir: Directory to save PCA model
+        """
+
         print("Embedding generator initializing")
         self.embedding_model = InceptionResnetV1(pretrained='vggface2').eval()
         print("Embedding model initialized successfully")
@@ -24,6 +30,13 @@ class EmbeddingGenerator():
             self.load_pca_model(pca_save_dir)
 
     def create_and_save_embeddings(self, face_dir, embedding_save_dir):
+        """
+        Generates embeddings for all faces in the input directory and saves them to the output directory as a numpy file
+
+        Args:
+            face_dir: Directory containing images
+            embedding_save_dir: Directory to save embeddings
+        """
         images = [os.path.join(face_dir, f) for f in os.listdir(face_dir) if f.endswith(('jpg'))]
 
         embeddings = []
@@ -74,11 +87,24 @@ class EmbeddingGenerator():
         return embedding
     
     def save_pca_model(self, pca_save_dir):
+        """
+        Save the PCA model to the specified directory
+
+        Args:
+            pca_save_dir: Directory to save PCA model
+        """
+
         np.save(os.path.join(pca_save_dir, "pca_components.npy"), self.pca.components_)
         np.save(os.path.join(pca_save_dir, "pca_mean.npy"), self.pca.mean_)
         np.save(os.path.join(pca_save_dir, "pca_variance.npy"), self.pca.explained_variance_)
 
     def load_pca_model(self, pca_save_dir):
+        """
+        Load the PCA model from the specified directory
+
+        Args:
+            pca_save_dir: Directory containing saved PCA model
+        """
         if os.path.exists(os.path.join(pca_save_dir, "pca_components.npy")):
             print("Loading saved PCA model")
             self.pca.components_ = np.load(os.path.join(pca_save_dir, "pca_components.npy"))
@@ -88,6 +114,15 @@ class EmbeddingGenerator():
             print("No saved PCA model found")
 
     def apply_pca_on_exising_embeddings(self, embeddings_path, pca_save_dir, embedding_save_dir):
+        """
+        Applies PCA on existing embeddings and saves the reduced embeddings 
+        (used if PCA was not used during embedding generation during preprocessing)
+
+        Args:
+            embeddings_path: Path to existing embeddings
+            pca_save_dir: Directory to save PCA model
+            embedding_save_dir: Directory to save reduced embeddings
+        """
         embeddings = np.load(embeddings_path)
         reduced_embeddings = self.pca.fit_transform(embeddings)
         np.save(os.path.join(embedding_save_dir, "reduced_embeddings.npy"), reduced_embeddings)

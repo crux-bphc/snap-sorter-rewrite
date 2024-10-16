@@ -8,6 +8,13 @@ from sklearn.metrics.pairwise import pairwise_distances
 
 class DBSCANClusterer():
     def __init__(self, input_image_dir, save_cluster_mapping_dir, eps = 0.20, use_pca=False):
+        """
+        input_image_dir: Directory containing images
+        save_cluster_mapping_dir: Directory to save cluster mapping
+        eps: Maximum distance between two samples for one to be considered as in the neighborhood of the other.
+        use_pca: Whether to use PCA reduced embeddings or not
+        """
+
         self.save_cluster_mapping_dir = save_cluster_mapping_dir
         if use_pca:
             print("Loading reduced embeddings")
@@ -23,6 +30,10 @@ class DBSCANClusterer():
         self.cluster_to_images = None
 
     def fit_map_clusterer(self):
+        """
+        Fit the DBSCAN model and map the clusters to images in the input directory
+        """
+
         self.dbscan.fit(self.embeddings)
         self.clusters = self.dbscan.labels_
         np.save(os.path.join(self.save_cluster_mapping_dir, 'clusters.npy'), self.clusters)
@@ -42,6 +53,10 @@ class DBSCANClusterer():
         np.save(os.path.join(self.save_cluster_mapping_dir, 'clustermapping.npy'), self.cluster_to_images)
 
     def save_clusters_to_folder(self, save_dir):
+        """
+        Save the clusters to folders for visual inspection
+        """
+
         if self.cluster_to_images is None:
             self.cluster_to_images = np.load(os.path.join(self.save_cluster_mapping_dir, 'clustermapping.npy'), allow_pickle=True).item()
         if self.clusters is None:
@@ -56,6 +71,14 @@ class DBSCANClusterer():
 
 class HDBSCANClusterer():
     def __init__(self, input_image_dir, save_cluster_mapping_dir, min_cluster_size=5, min_samples=5, use_pca=False):
+        """
+        input_image_dir: Directory containing images
+        save_cluster_mapping_dir: Directory to save cluster mapping
+        min_cluster_size: Minimum number of samples in a cluster
+        min_samples: Number of samples in a neighborhood for a point to be considered as a core point
+        use_pca: Whether to use PCA reduced embeddings or not
+        """
+
         self.save_cluster_mapping_dir = save_cluster_mapping_dir
         if use_pca:
             print("Loading reduced embeddings")
@@ -71,6 +94,10 @@ class HDBSCANClusterer():
         self.cluster_to_images = None
 
     def fit_map_clusterer(self):
+        """
+        Fit the HDBSCAN model and map the clusters to images in the input directory
+        """
+
         print("Finding pairwise distances")
         distance_matrix = pairwise_distances(self.embeddings, metric='cosine')
         self.hdbscan.fit(distance_matrix.astype(np.float64))
@@ -87,6 +114,10 @@ class HDBSCANClusterer():
         np.save(os.path.join(self.save_cluster_mapping_dir, 'clustermapping.npy'), self.cluster_to_images)
 
     def save_clusters_to_folder(self, save_dir):
+        """
+        Save the clusters to folders for visual inspection
+        """
+        
         if self.cluster_to_images is None:
             self.cluster_to_images = np.load(os.path.join(self.save_cluster_mapping_dir, 'clustermapping.npy'), allow_pickle=True).item()
         if self.clusters is None:
