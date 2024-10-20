@@ -4,11 +4,11 @@ from clusterer import DBSCANClusterer, HDBSCANClusterer
 import os
 
 SNAPS_DIR = r"data\alpha"
-FACES_SAVE_DIR = r"data\faces_D2"
-EMBEDDING_SAVE_DIR = r"embeddings\embeddings_D2"
-CLUSTER_SAVE_DIR = r"saved_cluster\cluster_D2"
-PCA_SAVE_DIR = r"pca_model\pca_D2"
-CLUSTER_LOCAL_SAVE = r'clusters\clusters_D2'
+FACES_SAVE_DIR = r"data\faces_D3"
+EMBEDDING_SAVE_DIR = r"embeddings\embeddings_D3"
+CLUSTER_SAVE_DIR = r"saved_cluster\cluster_D3"
+PCA_SAVE_DIR = r"pca_model\pca_D3"
+CLUSTER_LOCAL_SAVE = r'clusters\clusters_D3'
 
 def face_detect(images_dir, save_face_dir):
     face_detector = FaceDetector()

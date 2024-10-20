@@ -65,7 +65,7 @@ def see_clusters_piechart(cluster_folder, threshold_percentage=1.0):
     plt.show()
 
 if __name__ == "__main__":
-    see_clusters_histogram(r'saved_cluster\clusters_D2')
-    see_clusters_piechart(r'saved_cluster\clusters_D2',1.0)
+    see_clusters_histogram(r'saved_cluster\cluster_D3')
+    see_clusters_piechart(r'saved_cluster\cluster_D3',1.0)
 
 

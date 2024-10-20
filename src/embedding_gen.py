@@ -5,6 +5,7 @@ import torch
 import numpy as np
 import os
 from sklearn.decomposition import PCA
+from tqdm import tqdm
 
 # FACE_DIR = r"data\faces"
 # EMBEDDING_SAVE_DIR = r"embeddings"
@@ -38,11 +39,12 @@ class EmbeddingGenerator():
             embedding_save_dir: Directory to save embeddings
         """
         images = [os.path.join(face_dir, f) for f in os.listdir(face_dir) if f.endswith(('jpg'))]
+        os.makedirs(embedding_save_dir, exist_ok=True)
 
         embeddings = []
 
-        for image in images:
-            print(f"Generating embedding for {os.path.basename(image)}")
+        for image in tqdm(images, desc="Generating embeddings", unit="images"):
+            #print(f"Generating embedding for {os.path.basename(image)}")
             img = Image.open(image)
             img = self.transform(img)
             img = img.unsqueeze(0)
