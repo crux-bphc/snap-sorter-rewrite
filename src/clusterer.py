@@ -7,7 +7,7 @@ from scipy.spatial.distance import cosine
 from sklearn.metrics.pairwise import pairwise_distances
 
 class DBSCANClusterer():
-    def __init__(self, input_image_dir, save_cluster_mapping_dir, eps = 0.20, use_pca=False):
+    def __init__(self, input_image_dir, save_cluster_mapping_dir, embeddings_folder, eps = 0.20, use_pca=False):
         """
         input_image_dir: Directory containing images
         save_cluster_mapping_dir: Directory to save cluster mapping
@@ -16,12 +16,13 @@ class DBSCANClusterer():
         """
 
         self.save_cluster_mapping_dir = save_cluster_mapping_dir
+        self.embeddings_folder_path = embeddings_folder
         if use_pca:
             print("Loading reduced embeddings")
-            self.embeddings = np.load("embeddings/reduced_embeddings.npy")
+            self.embeddings = np.load(os.path.join(self.embeddings_folder_path, "reduced_embeddings.npy"))
         else:
             print("Loading original embeddings")
-            self.embeddings = np.load("embeddings/embeddings.npy")
+            self.embeddings = np.load(os.path.join(self.embeddings_folder_path, "embeddings.npy"))
         self.input_image_dir = input_image_dir
         self.image_paths = [os.path.join(self.input_image_dir, i) for i in os.listdir(self.input_image_dir)]
         print("Loading DBSCAN")
@@ -70,7 +71,7 @@ class DBSCANClusterer():
 
 
 class HDBSCANClusterer():
-    def __init__(self, input_image_dir, save_cluster_mapping_dir, min_cluster_size=5, min_samples=5, use_pca=False):
+    def __init__(self, input_image_dir, save_cluster_mapping_dir, embeddings_folder ,min_cluster_size=5, min_samples=5, use_pca=False):
         """
         input_image_dir: Directory containing images
         save_cluster_mapping_dir: Directory to save cluster mapping
@@ -78,14 +79,14 @@ class HDBSCANClusterer():
         min_samples: Number of samples in a neighborhood for a point to be considered as a core point
         use_pca: Whether to use PCA reduced embeddings or not
         """
-
+        self.embeddings_folder_path = embeddings_folder
         self.save_cluster_mapping_dir = save_cluster_mapping_dir
         if use_pca:
             print("Loading reduced embeddings")
-            self.embeddings = np.load("embeddings/reduced_embeddings.npy")
+            self.embeddings = np.load(os.path.join(self.embeddings_folder_path, "reduced_embeddings.npy"))
         else:
             print("Loading original embeddings")
-            self.embeddings = np.load("embeddings/embeddings.npy")
+            self.embeddings = np.load(os.path.join(self.embeddings_folder_path, "embeddings.npy"))
         self.input_image_dir = input_image_dir
         self.image_paths = [os.path.join(self.input_image_dir, i) for i in os.listdir(self.input_image_dir)]
         print("Loading HDBSCAN")

@@ -1,8 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import os
 
-def see_clusters_histogram():
-    clusters = np.load("saved_cluster/clusters.npy")
+def see_clusters_histogram(cluster_folder):
+    clusters = np.load(os.path.join(cluster_folder, "clusters.npy"))
     cluster_count = {}
     for cluster in clusters:
         if cluster not in cluster_count:
@@ -26,8 +27,8 @@ def see_clusters_histogram():
     plt.tight_layout()
     plt.show()
 
-def see_clusters_piechart(threshold_percentage=1.0):
-    clusters = np.load("saved_cluster/clusters.npy")
+def see_clusters_piechart(cluster_folder, threshold_percentage=1.0):
+    clusters = np.load(os.path.join(cluster_folder, "clusters.npy"))
     cluster_count = {}
     
     for cluster in clusters:
@@ -64,7 +65,7 @@ def see_clusters_piechart(threshold_percentage=1.0):
     plt.show()
 
 if __name__ == "__main__":
-    see_clusters_histogram()
-    see_clusters_piechart(1.0)
+    see_clusters_histogram(r'saved_cluster\clusters_D2')
+    see_clusters_piechart(r'saved_cluster\clusters_D2',1.0)
 
 
