@@ -108,7 +108,7 @@ class EmbeddingGenerator():
             pca_save_dir: Directory containing saved PCA model
         """
         if os.path.exists(os.path.join(pca_save_dir, "pca_components.npy")):
-            print("Loading saved PCA model")
+            print(f"Loading saved PCA model at {pca_save_dir}")
             self.pca.components_ = np.load(os.path.join(pca_save_dir, "pca_components.npy"))
             self.pca.mean_ = np.load(os.path.join(pca_save_dir, "pca_mean.npy"))
             self.pca.explained_variance_ = np.load(os.path.join(pca_save_dir, "pca_variance.npy"))
