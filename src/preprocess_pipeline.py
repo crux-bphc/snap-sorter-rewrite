@@ -4,11 +4,11 @@ from clusterer import DBSCANClusterer, HDBSCANClusterer
 import os
 
 SNAPS_DIR = r"data\alpha"
-FACES_SAVE_DIR = r"data\faces_D3"
-EMBEDDING_SAVE_DIR = r"embeddings\embeddings_D3"
-CLUSTER_SAVE_DIR = r"saved_cluster\cluster_D3"
-PCA_SAVE_DIR = r"pca_model\pca_D3"
-CLUSTER_LOCAL_SAVE = r'clusters\clusters_D3'
+FACES_SAVE_DIR = r"data\faces_D5"
+EMBEDDING_SAVE_DIR = r"embeddings\embeddings_D5"
+CLUSTER_SAVE_DIR = r"saved_cluster\cluster_D5"
+PCA_SAVE_DIR = r"pca_model\pca_D5"
+CLUSTER_LOCAL_SAVE = r'clusters\clusters_D5'
 
 def face_detect(images_dir, save_face_dir):
     face_detector = FaceDetector()
@@ -30,7 +30,7 @@ def cluster_faces_HDBSCAN(faces_dir, save_cluster_dir, embeddings_folder, use_pc
 
 def main():
     #face_detect(SNAPS_DIR, FACES_SAVE_DIR)
-    #generate_embeddings(FACES_SAVE_DIR, EMBEDDING_SAVE_DIR, use_pca=True, pca_save_dir=PCA_SAVE_DIR)
+    generate_embeddings(FACES_SAVE_DIR, EMBEDDING_SAVE_DIR, use_pca=True, pca_save_dir=PCA_SAVE_DIR)
     cluster_faces_HDBSCAN(FACES_SAVE_DIR, CLUSTER_SAVE_DIR, EMBEDDING_SAVE_DIR, use_pca=True)
 
     # emb = EmbeddingGenerator(n_components=40 ,use_pca=True, pca_save_dir=PCA_SAVE_DIR)

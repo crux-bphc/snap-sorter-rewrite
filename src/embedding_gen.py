@@ -95,6 +95,7 @@ class EmbeddingGenerator():
         Args:
             pca_save_dir: Directory to save PCA model
         """
+        os.makedirs(pca_save_dir, exist_ok=True)
 
         np.save(os.path.join(pca_save_dir, "pca_components.npy"), self.pca.components_)
         np.save(os.path.join(pca_save_dir, "pca_mean.npy"), self.pca.mean_)

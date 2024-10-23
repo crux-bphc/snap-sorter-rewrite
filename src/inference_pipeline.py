@@ -110,7 +110,8 @@ class Inferencer():
 
                 avg_similarity_score = np.mean(similarity_scores)
                 print(f"Average similarity score with cluster images: {avg_similarity_score}")
-                if avg_similarity_score > 0.65:
+                # TODO: keep 70% as threshold and for threshold between 60 to 70, prompt the user to choose
+                if avg_similarity_score > 0.6:
                     result.extend(image_name)
                 #return image_name
         print(result)

@@ -103,6 +103,7 @@ class HDBSCANClusterer():
         distance_matrix = pairwise_distances(self.embeddings, metric='cosine')
         self.hdbscan.fit(distance_matrix.astype(np.float64))
         self.clusters = self.hdbscan.labels_
+        os.makedirs(self.save_cluster_mapping_dir, exist_ok=True)
         np.save(os.path.join(self.save_cluster_mapping_dir, 'clusters.npy'), self.clusters)
 
         self.cluster_to_images = {}
