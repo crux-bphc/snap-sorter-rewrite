@@ -66,7 +66,8 @@ class Inferencer():
             images which contain the user face
         """
 
-        result = []
+        high_confidence_result = []
+        intermediate_confidence_result = {} #dictionary to store intermediate confidence images along with its day number and cluster number
 
         for i in range(len(self.clusters)):
             print("Generating embedding for user face")
@@ -111,11 +112,13 @@ class Inferencer():
                 avg_similarity_score = np.mean(similarity_scores)
                 print(f"Average similarity score with cluster images: {avg_similarity_score}")
                 # TODO: keep 70% as threshold and for threshold between 60 to 70, prompt the user to choose
-                if avg_similarity_score > 0.6:
-                    result.extend(image_name)
+                if avg_similarity_score > 0.7:
+                    high_confidence_result.extend(image_name)
+                elif avg_similarity_score > 0.6:
+                    intermediate_confidence_result[i + 1] = (nearest_cluster, image_name) #day number is i+1
                 #return image_name
-        print(result)
-        return result
+        print(high_confidence_result)
+        return high_confidence_result, intermediate_confidence_result
         
     def delete_test_image(self, cropped_face_path):
         """
