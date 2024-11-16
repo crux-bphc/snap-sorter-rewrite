@@ -77,6 +77,7 @@ images_folder = r"data/images"
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
+    os.makedirs("inferencing", exist_ok=True)
     USER_IMG_PATH = "inferencing/test.jpg"
     with open(USER_IMG_PATH, "wb") as f:
         f.write(uploaded_file.getbuffer())

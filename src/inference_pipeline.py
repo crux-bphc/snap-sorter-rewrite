@@ -4,7 +4,7 @@ import os
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 
-USER_IMG_PATH = r"inferencing\test.jpg"
+USER_IMG_PATH = r"inferencing/test.jpg"
 USER_IMG_SAVE_PATH = r"inferencing"
 
 class Inferencer():
@@ -20,23 +20,28 @@ class Inferencer():
         print("Loading clusters and cluster to images mapping")
         self.clusters = []
         self.cluster_to_images = []
-        for x in os.listdir("saved_cluster"):
+        for x in sorted(os.listdir("saved_cluster")):
             self.clusters.append(np.load(os.path.join("saved_cluster", x, "clusters.npy")))
             self.cluster_to_images.append(np.load(os.path.join("saved_cluster", x, "clustermapping.npy"), allow_pickle=True).item())
+        print(sorted(os.listdir("saved_cluster")))
         
         if use_pca:
             print("Loading reduced dataset embeddings")
             self.dataset_embeddings = []
-            for x in os.listdir("embeddings"):
+            for x in sorted(os.listdir("embeddings")):
                 self.dataset_embeddings.append(np.load(os.path.join("embeddings", x, "reduced_embeddings.npy")))
+            print(sorted(os.listdir("embeddings")))
             self.path_to_pca_models = []
-            for x in os.listdir("pca_model"):
+            for x in sorted(os.listdir("pca_model")):
                 self.path_to_pca_models.append(os.path.join("pca_model", x))
+            print(sorted(os.listdir("pca_model")))
         else:
             print("Loading original dataset embeddings")
             self.dataset_embeddings = []
-            for x in os.listdir("embeddings"):
+            for x in sorted(os.listdir("embeddings")):
                 self.dataset_embeddings.append(np.load(os.path.join("embeddings", x, "embeddings.npy")))
+            print(sorted(os.listdir("embeddings")))
+
 
     def process_image(self):
         """
@@ -101,7 +106,7 @@ class Inferencer():
             else:
                 person_in_images = self.cluster_to_images[i][nearest_cluster]
                 image_name = [x.split("_face")[0] for x in person_in_images]
-                print(f"User face belongs to cluster {nearest_cluster} with images {image_name}")
+                print(f"User face belongs to cluster {nearest_cluster} in day {i + 1} with images {image_name}")
 
                 #computing average similarity score of user face with cluster images to use it as a threshold to determine
                 #if user face is in Day-wise cluster or not
