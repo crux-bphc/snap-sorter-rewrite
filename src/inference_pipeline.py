@@ -120,10 +120,17 @@ class Inferencer():
                 if avg_similarity_score > 0.7:
                     high_confidence_result.extend(image_name)
                 elif avg_similarity_score > 0.6:
-                    intermediate_confidence_result[i + 1] = (nearest_cluster, image_name) #day number is i+1
-                #return image_name
+                    intermediate_confidence_result[i + 1] = {
+                    "cluster": int(nearest_cluster), # if this shit is not converted to python int, it raises JSON not serializable in API
+                    "images": image_name
+                }
+                    
         print(high_confidence_result)
-        return high_confidence_result, intermediate_confidence_result
+        results = {
+            "high_confidence": high_confidence_result,
+            "intermediate_confidence": intermediate_confidence_result
+        }
+        return results
         
     def delete_test_image(self, cropped_face_path):
         """
