@@ -11,7 +11,7 @@ db_models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="clusters"), name="static")
-
+app.mount("/images", StaticFiles(directory="data/images"), name="images")
 
 origins = [
     "http://localhost:8080",
