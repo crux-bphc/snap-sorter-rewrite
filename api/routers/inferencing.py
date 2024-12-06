@@ -1,4 +1,5 @@
 import os
+from typing import List
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
@@ -12,30 +13,42 @@ inferencer = Inferencer(use_pca=True)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 BASE_CLUSTER_PATH = os.path.join(BASE_DIR, "clusters")
 STATIC_BASE_URL = "http://127.0.0.1:8000/static"
+IMAGES_BASE_URL = "http://127.0.0.1:8000/images"
 
-def update_user_images(db: Session, user_id: int, image_names: list[str]):
+def update_user_images(db: Session, user_id: int, image_names: list[str], update: bool):
+    if len(image_names) == 0:
+        user = db.query(db_models.User).filter(db_models.User.id == user_id).first()
+        if user:
+            user.found_in_images.clear()
+            db.commit()
+            print("Cleared all images for the user.")
+        return
+
     image_ids = []
     for image_name in image_names:
         image = db.query(db_models.Image).filter(db_models.Image.image_name == image_name).first()
-        image_ids.append(image.id)
+        if image:
+            image_ids.append(image.id)
 
     try:
-        db.execute(
-            db_models.user_images.delete().where(db_models.user_images.c.user_id == user_id)
-        )
-        db.commit()
-        db.refresh(db_models.user_images)
-        for image_id in image_ids:
-            db.execute(
-                db_models.user_images.insert().values(user_id=user_id, image_id=image_id)
-            )
+        if not update:
+            user = db.query(db_models.User).filter(db_models.User.id == user_id).first()
+            if user:
+                user.found_in_images.clear()
+                print("Deleted all images for the user, adding new ones")
+
+        user = db.query(db_models.User).filter(db_models.User.id == user_id).first()
+        if user:
+            for image_id in image_ids:
+                image = db.query(db_models.Image).filter(db_models.Image.id == image_id).first()
+                if image:
+                    if image not in user.found_in_images:
+                        user.found_in_images.append(image)
+            db.commit()
+            print("New images have been added for the user.")
     except Exception as e:
-        print("No images found for the user, adding new ones")
-        for image_id in image_ids:
-            db.execute(
-                db_models.user_images.insert().values(user_id=user_id, image_id=image_id)
-            )
-    db.commit()
+        db.rollback()
+        print("Error occurred while updating user images:", e)
 
 @router.post("/upload")
 async def upload_image(
@@ -60,10 +73,9 @@ async def upload_image(
 
     if response["intermediate_confidence"]:
         response["message"] = "We need a bit of help to identify you in the following images."
-        if len(response["high_confidence"]) > 0:
-            update_user_images(db, current_user.id, response["high_confidence"])
+        update_user_images(db, current_user.id, response["high_confidence"], update=False)
     else:
-        update_user_images(db, current_user.id, response["high_confidence"])
+        update_user_images(db, current_user.id, response["high_confidence"], update=False)
         response["message"] = None
 
     return JSONResponse(content=response)
@@ -84,7 +96,33 @@ async def get_cluster_samples(
         image_url = f"{STATIC_BASE_URL}/clusters_D{key}/{value['cluster']}/{first_image}"
         response_data[key] = {
             "cluster": value["cluster"],
-            "image_url": image_url,
+            "sample_url": image_url,
+            "images" : value["images"]
         }
 
     return response_data
+
+@router.post("/update_user_selected_images")
+async def update_user_selected_images(
+    selected_images: List[str],
+    db: Session = Depends(get_db),
+    current_user: int = Depends(oauth2.get_current_user),
+):
+    if selected_images:
+        update_user_images(db, current_user.id, selected_images, update=True)
+        return JSONResponse(content={"message": "Images updated successfully"})
+    else:
+        return JSONResponse(content={"message": "No images selected to update"})
+
+@router.get("/get_user_results")
+async def get_user_results(
+    db: Session = Depends(get_db),
+    current_user: int = Depends(oauth2.get_current_user),
+):
+    user_images = db.query(db_models.user_images).filter(db_models.user_images.c.user_id == current_user.id).all()
+    image_urls = []
+    for user_image in user_images:
+        image = db.query(db_models.Image).filter(db_models.Image.id == user_image.image_id).first()
+        image_urls.append(f"{IMAGES_BASE_URL}/{image.image_name}")
+    
+    return JSONResponse(content={"image_urls": image_urls})
