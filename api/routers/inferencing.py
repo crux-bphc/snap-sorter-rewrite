@@ -3,7 +3,7 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
-from api import oauth2, db_models
+from api import oauth2, db_models, response_schemas
 from src.inference_pipeline import Inferencer
 from api.database import get_db
 
@@ -50,7 +50,7 @@ def update_user_images(db: Session, user_id: int, image_names: list[str], update
         db.rollback()
         print("Error occurred while updating user images:", e)
 
-@router.post("/upload")
+@router.post("/upload", response_model=response_schemas.UploadImageResponse)
 async def upload_image(
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
@@ -78,9 +78,9 @@ async def upload_image(
         update_user_images(db, current_user.id, response["high_confidence"], update=False)
         response["message"] = None
 
-    return JSONResponse(content=response)
+    return response
 
-@router.post("/cluster_samples")
+@router.post("/cluster_samples", response_model=response_schemas.ClusterSamplesResponse)
 async def get_cluster_samples(
     intermediate_confidence_data: dict,
     current_user: int = Depends(oauth2.get_current_user),
@@ -114,7 +114,7 @@ async def update_user_selected_images(
     else:
         return JSONResponse(content={"message": "No images selected to update"})
 
-@router.get("/get_user_results")
+@router.get("/get_user_results", response_model=response_schemas.UserResultsResponse)
 async def get_user_results(
     db: Session = Depends(get_db),
     current_user: int = Depends(oauth2.get_current_user),
@@ -125,4 +125,4 @@ async def get_user_results(
         image = db.query(db_models.Image).filter(db_models.Image.id == user_image.image_id).first()
         image_urls.append(f"{IMAGES_BASE_URL}/{image.image_name}")
     
-    return JSONResponse(content={"image_urls": image_urls})
+    return {"image_urls": image_urls}
