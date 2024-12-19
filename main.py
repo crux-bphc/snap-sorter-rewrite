@@ -1,10 +1,14 @@
 import os
+import dotenv
+dotenv.load_dotenv()
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.sessions import SessionMiddleware
 from fastapi.staticfiles import StaticFiles
 from api import db_models
 from api.database import engine
-from api.routers import inferencing, user, auth
+from api.routers import inferencing, auth
+
 
 db_models.Base.metadata.create_all(bind=engine)
 
@@ -26,7 +30,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(user.router)
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=os.getenv("SESSION_SECRET_KEY")
+)
+
+
 app.include_router(auth.router)
 app.include_router(inferencing.router)
 

@@ -12,8 +12,9 @@ router = APIRouter()
 inferencer = Inferencer(use_pca=True)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 BASE_CLUSTER_PATH = os.path.join(BASE_DIR, "clusters")
-STATIC_BASE_URL = "http://127.0.0.1:8000/static"
-IMAGES_BASE_URL = "http://127.0.0.1:8000/images"
+STATIC_BASE_URL = os.getenv("STATIC_BASE_URL")
+IMAGES_BASE_URL = os.getenv("IMAGES_BASE_URL")
+
 
 def update_user_images(db: Session, user_id: int, image_names: list[str], update: bool):
     if len(image_names) == 0:
@@ -50,6 +51,7 @@ def update_user_images(db: Session, user_id: int, image_names: list[str], update
         db.rollback()
         print("Error occurred while updating user images:", e)
 
+
 @router.post("/upload", response_model=response_schemas.UploadImageResponse)
 async def upload_image(
     file: UploadFile = File(...),
@@ -80,6 +82,7 @@ async def upload_image(
 
     return response
 
+
 @router.post("/cluster_samples", response_model=response_schemas.ClusterSamplesResponse)
 async def get_cluster_samples(
     intermediate_confidence_data: dict,
@@ -101,6 +104,7 @@ async def get_cluster_samples(
         }
 
     return response_data
+
 
 @router.post("/update_user_selected_images")
 async def update_user_selected_images(
