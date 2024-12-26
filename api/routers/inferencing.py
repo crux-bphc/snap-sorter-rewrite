@@ -143,9 +143,14 @@ async def get_user_results(
     Gets the image URLs of the images found for the user in the database. It returns the image URLs in the response.
     """
     user_images = db.query(db_models.user_images).filter(db_models.user_images.c.user_id == current_user.id).all()
-    image_urls = []
+    image_data = {}
     for user_image in user_images:
         image = db.query(db_models.Image).filter(db_models.Image.id == user_image.image_id).first()
-        image_urls.append(f"{IMAGES_BASE_URL}/{image.image_name}")
+        if image:
+            image_data[image.image_name] = {
+                "image_url": f"{IMAGES_BASE_URL}/{image.image_name}",
+                "image_drive_id": f"https://drive.google.com/file/d/{image.image_id_drive}/view"
+            }
+                    
     
-    return {"image_urls": image_urls}
+    return {"images" :image_data}

@@ -34,8 +34,15 @@ class ClusterSamplesResponseData(BaseModel):
 
 ClusterSamplesResponse = Dict[int, ClusterSamplesResponseData]
 
+class ImageDetails(BaseModel):
+    image_url: str
+    image_drive_id: str
+
+    class Config:
+        orm_mode = True
+
 class UserResultsResponse(BaseModel):
-    image_urls: List[str]
+    images: Dict[str, ImageDetails]
 
     class Config:
         orm_mode = True
