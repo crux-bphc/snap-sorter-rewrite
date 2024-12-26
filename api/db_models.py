@@ -22,7 +22,8 @@ class Image(Base):
     __tablename__ = "images"
     id = Column(Integer, primary_key=True, nullable=False)
     image_name = Column(String, nullable=False)
-    
+    image_id_drive = Column(String, nullable=False)
+
     users_found_in = relationship(
         "User", secondary=user_images, back_populates="found_in_images"
     )
