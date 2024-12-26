@@ -7,7 +7,9 @@ from api import oauth2, db_models, response_schemas
 from src.inference_pipeline import Inferencer
 from api.database import get_db
 
-router = APIRouter()
+router = APIRouter(
+    tags=["Core Functionality and Inferencing"]
+)
 
 inferencer = Inferencer(use_pca=True)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
@@ -58,6 +60,11 @@ async def upload_image(
     db: Session = Depends(get_db),
     current_user: int = Depends(oauth2.get_current_user),
 ):
+    """
+    Upload an image file for inferencing and clustering. The image is processed and the response contains the high confidence images
+    and intermediate confidence data. Intermediate confidence contains the day number as a key and the cluster number and images in that
+    cluster as the value.
+    """
     if file.content_type not in ["image/jpeg", "image/png"]:
         raise HTTPException(status_code=400, detail="Invalid file type. Please upload JPG or PNG.")
     
@@ -88,6 +95,10 @@ async def get_cluster_samples(
     intermediate_confidence_data: dict,
     current_user: int = Depends(oauth2.get_current_user),
 ):
+    """
+    Gets the sample images for the clusters in the intermediate confidence data. It takes the entire intermediate confidence data
+    in the request body and returns the sample image URL for each cluster along with the images in that cluster.
+    """
     response_data = {}
 
     for key, value in intermediate_confidence_data.items():
@@ -112,17 +123,25 @@ async def update_user_selected_images(
     db: Session = Depends(get_db),
     current_user: int = Depends(oauth2.get_current_user),
 ):
+    """
+    Updates the selected images for the user in the database. It takes the list of selected image names in the request body and
+    updates the user's images in the database.
+    """
     if selected_images:
         update_user_images(db, current_user.id, selected_images, update=True)
         return JSONResponse(content={"message": "Images updated successfully"})
     else:
         return JSONResponse(content={"message": "No images selected to update"})
+    
 
 @router.get("/get_user_results", response_model=response_schemas.UserResultsResponse)
 async def get_user_results(
     db: Session = Depends(get_db),
     current_user: int = Depends(oauth2.get_current_user),
 ):
+    """
+    Gets the image URLs of the images found for the user in the database. It returns the image URLs in the response.
+    """
     user_images = db.query(db_models.user_images).filter(db_models.user_images.c.user_id == current_user.id).all()
     image_urls = []
     for user_image in user_images:
