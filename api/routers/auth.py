@@ -23,12 +23,18 @@ google = oauth.register(
     
 @router.get("/google-login")
 async def google_login(request: Request):
+    """
+    Redirects the user to Google's OAuth
+    """
     redirect_uri = request.url_for("google_auth")
     return await google.authorize_redirect(request, redirect_uri)
 
 
 @router.get("/google-auth")
 async def google_auth(request: Request, db: Session = Depends(get_db)):
+    """
+    Handles the callback from Google OAuth and redirects the user to the frontend along with the access token
+    """
     try:
         token = await google.authorize_access_token(request)
         user_info = token.get("userinfo", {})
