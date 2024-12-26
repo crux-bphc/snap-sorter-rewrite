@@ -43,7 +43,7 @@ Unzip the downloaded file.
 
 The structure should look like this:
 ```
-snap-sorter-rewrite/
+backend/
 │
 ├── data/
 ├── clusters/
