@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        gfs: ["GFS Didot", "sans-serif"], // Replace 'custom' with your alias
+        gfs: ["GFS Didot"], // Replace 'custom' with your alias
       },
       colors: {
         background: "#1E1E1E", // Custom background color
