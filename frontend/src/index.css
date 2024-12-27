@@ -2,9 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: 'GFS Didot';
-  src: url('/GFSDidot-Regular.ttf') format('ttf');
-  font-weight: 400;
-  font-style: normal;
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --border: 240 5.9% 90%;
+  }
+  .dark {
+    --background: 235 21% 9%;
+    --foreground: 0 0% 98%;
+    --border: 357.69 83.87% 18%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border m-0;
+  }
+  body {
+    @apply bg-background text-foreground flex min-h-screen min-w-80 flex-col font-gfs;
+  }
+
+  @font-face {
+    font-family: "GFS Didot";
+    src: url("/GFS-Didot-Regular.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+  }
 }
