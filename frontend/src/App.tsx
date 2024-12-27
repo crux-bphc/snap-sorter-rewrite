@@ -1,12 +1,20 @@
-
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
 
 function App() {
+  const queryClient = new QueryClient();
 
   return (
     <>
-      <p className='bg-black text-3xl font-gfs text-foreground'>SNAP SORTER</p>        
+      <QueryClientProvider client={queryClient}>
+        <p className="bg-black texSSt-3xl font-gfs text-foreground">
+          SNAP SORTER
+        </p>
+      </QueryClientProvider>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
