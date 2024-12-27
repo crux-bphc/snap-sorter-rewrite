@@ -68,17 +68,17 @@ async def upload_image(
     if file.content_type not in ["image/jpeg", "image/png"]:
         raise HTTPException(status_code=400, detail="Invalid file type. Please upload JPG or PNG.")
     
-    USER_IMG_PATH = os.path.join(BASE_DIR, "inferencing", "test.jpg")
+    USER_IMG_PATH = os.path.join(BASE_DIR, "inferencing", f"test_{current_user.id}.jpg")
     os.makedirs(os.path.dirname(USER_IMG_PATH), exist_ok=True)
     with open(USER_IMG_PATH, "wb") as image_handle:
         image_handle.write(file.file.read())
 
-    cropped_face_path = inferencer.process_image()
+    cropped_face_path = inferencer.process_image(USER_IMG_PATH)
     if not cropped_face_path:
         raise HTTPException(status_code=400, detail="No face detected in the uploaded image. Try again.")
     
     response = inferencer.find_cluster(cropped_face_path)
-    inferencer.delete_test_image(cropped_face_path)
+    inferencer.delete_test_image(USER_IMG_PATH, cropped_face_path)
 
     if response["intermediate_confidence"]:
         response["message"] = "We need a bit of help to identify you in the following images."

@@ -4,7 +4,6 @@ import os
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 
-USER_IMG_PATH = r"inferencing/test.jpg"
 USER_IMG_SAVE_PATH = r"inferencing"
 
 class Inferencer():
@@ -43,7 +42,7 @@ class Inferencer():
             print(sorted(os.listdir("embeddings")))
 
 
-    def process_image(self):
+    def process_image(self, user_image_path):
         """
         Detect and extract user face from image. The cropped face is saved in the same directory as the input image
         and will be deleted after inference.
@@ -54,7 +53,7 @@ class Inferencer():
 
         print("Cropping and saving user face")
         try:
-            cropped_face_path = self.facedectector_model.save_cropped_face(USER_IMG_PATH, USER_IMG_SAVE_PATH)
+            cropped_face_path = self.facedectector_model.save_cropped_face(user_image_path, USER_IMG_SAVE_PATH)
             return cropped_face_path
         except Exception as e:
             print(f"Error in cropping face: {e}")
@@ -132,9 +131,9 @@ class Inferencer():
         }
         return results
         
-    def delete_test_image(self, cropped_face_path):
+    def delete_test_image(self, user_image_path, cropped_face_path):
         """
         Delete the test image after inference
         """
-        os.remove(USER_IMG_PATH)
+        os.remove(user_image_path)
         os.remove(cropped_face_path)
