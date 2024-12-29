@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { useAuth } from "./auth-context";
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { token } = useAuth();
 
   return (
     <header className="bg-background text-foreground">
@@ -9,15 +11,21 @@ const Navbar: React.FC = () => {
         <h1 className="text-2xl md:text-3xl">SNAPSORTER</h1>
 
         <nav className="hidden md:flex space-x-8">
-          <a href="#search" className="hover:text-gray-400">
+          <a href="/search" className="hover:text-gray-400">
             SEARCH
           </a>
-          <a href="#dashboard" className="hover:text-gray-400">
+          <a href="/dashboard" className="hover:text-gray-400">
             DASHBOARD
           </a>
-          <a href="#profile" className="hover:text-gray-400">
-            MY PROFILE
-          </a>
+          {token ? (
+            <a href="/profile" className="hover:text-gray-400">
+              MY PROFILE
+            </a>
+          ) : (
+            <a href="/login" className="hover:text-gray-400">
+              LOGIN
+            </a>
+          )}
         </nav>
 
         <button
@@ -43,15 +51,21 @@ const Navbar: React.FC = () => {
 
       {isMenuOpen && (
         <div className="absolute top-14 right-4 bg-background text-foreground px-4 py-4 shadow-lg z-50 text-right">
-          <a href="#search" className="block py-2 hover:text-gray-400">
+          <a href="/search" className="block py-2 hover:text-gray-400">
             SEARCH
           </a>
-          <a href="#dashboard" className="block py-2 hover:text-gray-400">
+          <a href="/dashboard" className="block py-2 hover:text-gray-400">
             DASHBOARD
           </a>
-          <a href="#profile" className="block py-2 hover:text-gray-400">
-            MY PROFILE
-          </a>
+          {token ? (
+            <a href="/profile" className="block py-2 hover:text-gray-400">
+              MY PROFILE
+            </a>
+          ) : (
+            <a href="/login" className="block py-2 hover:text-gray-400">
+              LOGIN
+            </a>
+          )}
         </div>
       )}
     </header>

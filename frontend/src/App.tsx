@@ -1,12 +1,25 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/navbar";
+import { AuthProvider } from "./components/auth-context";
+import LoginPage from "./pages/login";
+import RedirectHandler from "./components/redirect-handler";
 
 const queryClient = new QueryClient();
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Navbar />
+      <AuthProvider>
+        <Router>
+          <Navbar />
+          <Routes>
+            <Route path="/" />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/redirect" element={<RedirectHandler />} />
+          </Routes>
+        </Router>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
