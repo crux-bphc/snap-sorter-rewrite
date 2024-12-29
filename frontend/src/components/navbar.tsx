@@ -42,7 +42,7 @@ const Navbar: React.FC = () => {
       </div>
 
       {isMenuOpen && (
-        <div className="absolute top-14 right-0 bg-background text-foreground px-4 py-4 h-screen w-2/3 shadow-lg z-50 text-right">
+        <div className="absolute top-14 right-4 bg-background text-foreground px-4 py-4 shadow-lg z-50 text-right">
           <a href="#search" className="block py-2 hover:text-gray-400">
             SEARCH
           </a>

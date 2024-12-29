@@ -9,8 +9,8 @@
     --border: 240 5.9% 90%;
   }
   .dark {
-    --background: 0 0% 0%;
-    --foreground: 0 0% 98%;
+    --background: 0 0% 100%;
+    --foreground: 0 0% 0%;
     --border: 357.69 83.87% 18%;
   }
 }
