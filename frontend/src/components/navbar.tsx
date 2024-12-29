@@ -4,7 +4,7 @@ const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="bg-black text-white">
+    <header className="bg-background text-foreground">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         <h1 className="text-2xl md:text-3xl">SNAPSORTER</h1>
 
@@ -21,7 +21,7 @@ const Navbar: React.FC = () => {
         </nav>
 
         <button
-          className="md:hidden text-white focus:outline-none"
+          className="md:hidden text-foreground focus:outline-none"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
           <svg
@@ -42,7 +42,7 @@ const Navbar: React.FC = () => {
       </div>
 
       {isMenuOpen && (
-        <div className="absolute top-14 right-0 bg-black text-white px-4 py-4 h-screen w-2/3 shadow-lg z-50 text-right">
+        <div className="absolute top-14 right-0 bg-background text-foreground px-4 py-4 h-screen w-2/3 shadow-lg z-50 text-right">
           <a href="#search" className="block py-2 hover:text-gray-400">
             SEARCH
           </a>
