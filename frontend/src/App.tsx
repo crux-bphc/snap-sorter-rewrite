@@ -4,6 +4,7 @@ import Navbar from "./components/navbar";
 import { AuthProvider } from "./components/auth-context";
 import LoginPage from "./pages/login";
 import RedirectHandler from "./components/redirect-handler";
+import Landing from "./pages/landing";
 
 const queryClient = new QueryClient();
 
@@ -14,7 +15,7 @@ function App() {
         <Router>
           <Navbar />
           <Routes>
-            <Route path="/" />
+            <Route path="/" element={<Landing />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/redirect" element={<RedirectHandler />} />
           </Routes>

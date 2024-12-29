@@ -1,0 +1,88 @@
+@property --msize {
+  syntax: "<percentage>";
+  inherits: true;
+  initial-value: 40%;
+}
+
+@property --mpos {
+  syntax: "<percentage>";
+  inherits: true;
+  initial-value: 90%;
+}
+
+@property --op {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --divscroll {
+  syntax: "<percentage>";
+  inherits: true;
+  initial-value: 0%;
+}
+
+@keyframes slide-frame {
+  from {
+    --mpos: 150%;
+  }
+  to {
+    --mpos: 90%;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    --op: 0;
+  }
+  to {
+    --op: 1;
+  }
+}
+
+.landing-image {
+  animation: fade-in 0.3s 0.1s ease-in forwards;
+}
+
+@media (min-width: 1024px) {
+  .image-container {
+    --time: 0.6s;
+    --timing: ease;
+    --mask-margin: 4px;
+    animation: slide-frame var(--time) var(--timing) 0.1s;
+    &::before {
+      --y-pos: calc((100% - var(--msize) * 706 / 352) / 2);
+      content: "Snapsorter";
+      text-transform: uppercase;
+      font-size: 1.5rem;
+      text-align: center;
+      padding-top: 30px;
+      position: absolute;
+      top: var(--y-pos);
+      bottom: var(--y-pos);
+      left: var(--mpos);
+      width: var(--msize);
+      opacity: var(--op);
+      animation: fade-in 0.2s 0.1s ease-in forwards;
+      transform: translateX(calc(var(--mpos) * -1));
+      z-index: 2;
+      background: url("/frame.webp");
+      background-repeat: no-repeat;
+      background-size: contain;
+    }
+    &::after {
+      content: "";
+      position: absolute;
+      backdrop-filter: grayscale(100%) blur(1px);
+      inset: 0;
+      z-index: 1;
+      mask:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='352' height='706' viewBox='0 0 352 706' fill='none'%3E%3Crect width='352' height='706' rx='55' fill='%23000'/%3E%3C/svg%3E")
+          no-repeat,
+        linear-gradient(#000 0 0);
+      mask-composite: exclude;
+      mask-size: calc(var(--msize) - var(--mask-margin));
+      mask-position: var(--mpos) center;
+    }
+  }
+}
