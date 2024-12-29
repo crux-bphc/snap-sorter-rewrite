@@ -6,6 +6,9 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      fontSize: {
+        "1.5xl": "1.375rem",
+      },
       fontFamily: {
         gfs: ["GFS Didot", ...fontFamily.sans],
       },
