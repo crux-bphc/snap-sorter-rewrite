@@ -6,11 +6,11 @@ const Navbar: React.FC = () => {
   const { token } = useAuth();
 
   return (
-    <header className="bg-background text-foreground">
-      <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+    <header className="top-0 bg-background text-foreground lg:sticky">
+      <div className="container mx-auto flex items-center justify-between px-4 py-4">
         <h1 className="text-2xl md:text-3xl">SNAPSORTER</h1>
 
-        <nav className="hidden md:flex space-x-8">
+        <nav className="hidden space-x-8 md:flex">
           <a href="/search" className="hover:text-gray-400">
             SEARCH
           </a>
@@ -29,7 +29,7 @@ const Navbar: React.FC = () => {
         </nav>
 
         <button
-          className="md:hidden text-foreground focus:outline-none"
+          className="text-foreground focus:outline-none md:hidden"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
           <svg
@@ -37,7 +37,7 @@ const Navbar: React.FC = () => {
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
-            className="w-6 h-6"
+            className="h-6 w-6"
           >
             <path
               strokeLinecap="round"
@@ -50,8 +50,8 @@ const Navbar: React.FC = () => {
       </div>
 
       {isMenuOpen && (
-        <div className="absolute top-14 right-4 bg-background text-foreground px-4 py-4 shadow-lg z-50 text-right">
-          <a href="/search" className="block py-2 hover:text-gray-400">
+        <div className="absolute right-4 top-14 z-50 bg-background px-4 py-4 text-right text-foreground shadow-lg">
+          <a href="#search" className="block py-2 hover:text-gray-400">
             SEARCH
           </a>
           <a href="/dashboard" className="block py-2 hover:text-gray-400">

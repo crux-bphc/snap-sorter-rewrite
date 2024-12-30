@@ -17,10 +17,10 @@
 
 @layer base {
   * {
-    @apply border-border m-0;
+    @apply m-0 border-border;
   }
-  body {
-    @apply bg-background text-foreground flex min-h-screen min-w-80 flex-col font-gfs;
+  #root {
+    @apply flex min-h-screen min-w-80 flex-col bg-background font-gfs text-foreground;
   }
 
   @font-face {
