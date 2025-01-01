@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from api import oauth2, db_models, response_schemas
 from src.inference_pipeline import Inferencer
 from api.database import get_db
+import time
 
 router = APIRouter(
     tags=["Core Functionality and Inferencing"]
@@ -53,6 +54,18 @@ def update_user_images(db: Session, user_id: int, image_names: list[str], update
         db.rollback()
         print("Error occurred while updating user images:", e)
 
+def update_user_results(db: Session, user_id: int, user_face_path: str, clustering_results: dict):
+    if clustering_results:
+        user_cluster_data = db_models.UserFaceAndResult(
+            user_id=user_id,
+            user_face_path=user_face_path,
+            clusters=clustering_results["cluster_numbers"],
+            confidences=clustering_results["similarity_scores"]
+        )
+        db.add(user_cluster_data)
+        db.commit()
+        print("User results have been updated in the database.")
+
 
 @router.post("/upload", response_model=response_schemas.UploadImageResponse)
 async def upload_image(
@@ -68,7 +81,7 @@ async def upload_image(
     if file.content_type not in ["image/jpeg", "image/png"]:
         raise HTTPException(status_code=400, detail="Invalid file type. Please upload JPG or PNG.")
     
-    USER_IMG_PATH = os.path.join(BASE_DIR, "inferencing", f"test_{current_user.id}.jpg")
+    USER_IMG_PATH = os.path.join(BASE_DIR, "inferencing", f"user_{current_user.id}_{int(time.time())}.jpg")
     os.makedirs(os.path.dirname(USER_IMG_PATH), exist_ok=True)
     with open(USER_IMG_PATH, "wb") as image_handle:
         image_handle.write(file.file.read())
@@ -77,7 +90,10 @@ async def upload_image(
     if not cropped_face_path:
         raise HTTPException(status_code=400, detail="No face detected in the uploaded image. Try again.")
     
-    response = inferencer.find_cluster(cropped_face_path)
+    response, clustering_results = inferencer.find_cluster(cropped_face_path)
+
+    update_user_results(db, current_user.id, cropped_face_path, clustering_results)
+
     inferencer.delete_test_image(USER_IMG_PATH, cropped_face_path)
 
     if response["intermediate_confidence"]:
