@@ -7,7 +7,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 USER_IMG_SAVE_PATH = r"inferencing"
 
 class Inferencer():
-    def __init__(self, use_pca=False):
+    def __init__(self, use_pca=True):
         """
         use_pca: Whether to use PCA reduced embeddings or not
         pca_save_dir: Directory to saved PCA model
@@ -72,6 +72,10 @@ class Inferencer():
 
         high_confidence_result = []
         intermediate_confidence_result = {} #dictionary to store intermediate confidence images along with its day number and cluster number
+        clustering_results = {
+            "cluster_numbers": [],
+            "similarity_scores": []
+        }
 
         for i in range(len(self.clusters)):
             print("Generating embedding for user face")
@@ -106,6 +110,7 @@ class Inferencer():
                 person_in_images = self.cluster_to_images[i][nearest_cluster]
                 image_name = [x.split("_face")[0] for x in person_in_images]
                 print(f"User face belongs to cluster {nearest_cluster} in day {i + 1} with images {image_name}")
+                clustering_results["cluster_numbers"].append(int(nearest_cluster))
 
                 #computing average similarity score of user face with cluster images to use it as a threshold to determine
                 #if user face is in Day-wise cluster or not
@@ -115,6 +120,8 @@ class Inferencer():
 
                 avg_similarity_score = np.mean(similarity_scores)
                 print(f"Average similarity score with cluster images: {avg_similarity_score}")
+                clustering_results["similarity_scores"].append(round(float(avg_similarity_score), 5))
+
                 # TODO: keep 70% as threshold and for threshold between 60 to 70, prompt the user to choose
                 if avg_similarity_score > 0.7:
                     high_confidence_result.extend(image_name)
@@ -129,11 +136,11 @@ class Inferencer():
             "high_confidence": high_confidence_result,
             "intermediate_confidence": intermediate_confidence_result
         }
-        return results
+        return results, clustering_results
         
     def delete_test_image(self, user_image_path, cropped_face_path):
         """
         Delete the test image after inference
         """
         os.remove(user_image_path)
-        os.remove(cropped_face_path)
+        #os.remove(cropped_face_path) #temporarily store cropped faces instead of embeddings
