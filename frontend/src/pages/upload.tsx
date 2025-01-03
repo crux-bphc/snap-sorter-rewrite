@@ -118,16 +118,16 @@ const Upload: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center bg-background p-4 text-foreground">
+    <div className="flex flex-1 flex-col items-center justify-center gap-4 bg-background p-4 text-foreground">
       {!clusterSamples ? (
         <>
-          <header className="mb-6 text-center">
+          <header className="text-center">
             <h1 className="text-3xl">UPLOAD YOUR IMAGE</h1>
             <p className="mt-2 max-w-md">
               Select an image to identify your cluster of photos.
             </p>
           </header>
-          <div className="relative mb-4">
+          <div className="relative">
             <label
               htmlFor="fileInput"
               className="relative flex h-48 w-48 cursor-pointer items-center justify-center border-2 border-dashed border-foreground text-sm text-foreground hover:border-gray-700"
@@ -170,7 +170,7 @@ const Upload: React.FC = () => {
           </button>
         </>
       ) : (
-        <Select images={clusterSamples} />
+        <Select samples={clusterSamples} />
       )}
     </div>
   );

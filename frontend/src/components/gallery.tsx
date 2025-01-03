@@ -44,7 +44,7 @@ const Gallery: React.FC<ImagesProps> = ({ images }) => {
     <div className="w-full">
       <Masonry columnsCount={columns}>
         {Object.entries(images).map(([i, { image_url, image_drive_id }]) => (
-          <a key={i} href={image_drive_id}>
+          <a key={i} href={image_drive_id} target="_blank">
             <div className="img-container">
               <img
                 src={image_url}
