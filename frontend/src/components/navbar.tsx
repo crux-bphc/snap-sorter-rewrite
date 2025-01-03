@@ -14,11 +14,11 @@ const Navbar: React.FC = () => {
           <a href="/upload" className="hover:text-gray-400">
             SEARCH
           </a>
-          <a href="/upload" className="hover:text-gray-400">
+          <a href="/results" className="hover:text-gray-400">
             DASHBOARD
           </a>
           {token ? (
-            <a href="/upload" className="hover:text-gray-400">
+            <a href="/results" className="hover:text-gray-400">
               MY PROFILE
             </a>
           ) : (
@@ -54,11 +54,11 @@ const Navbar: React.FC = () => {
           <a href="/upload" className="block py-2 hover:text-gray-400">
             SEARCH
           </a>
-          <a href="/upload" className="block py-2 hover:text-gray-400">
+          <a href="/results" className="block py-2 hover:text-gray-400">
             DASHBOARD
           </a>
           {token ? (
-            <a href="/upload" className="block py-2 hover:text-gray-400">
+            <a href="/results" className="block py-2 hover:text-gray-400">
               MY PROFILE
             </a>
           ) : (

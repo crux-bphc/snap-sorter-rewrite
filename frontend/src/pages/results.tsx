@@ -19,11 +19,14 @@ interface Images {
 const Results: React.FC = () => {
   const navigate = useNavigate();
   const [images, setImages] = useState<Images>({ images: {} });
-  const { token } = useAuth();
+  const [loaded, setLoaded] = useState(false);
+  const { token, isLoading } = useAuth();
 
   useEffect(() => {
     if (!token) {
-      navigate("/login");
+      if (!isLoading) {
+        navigate("/login");
+      }
       return;
     }
 
@@ -33,6 +36,7 @@ const Results: React.FC = () => {
           token,
         });
         setImages(data);
+        setLoaded(true);
         console.log("Set images", data);
       } catch (error) {
         console.error("Failed to fetch images:", error);
@@ -40,7 +44,11 @@ const Results: React.FC = () => {
     };
 
     fetchImages();
-  }, [token, navigate]);
+  }, [token, isLoading, navigate]);
+
+  if (!loaded) {
+    return <div>Loading ...</div>;
+  }
 
   return (
     <div className="flex w-full items-center justify-center">

@@ -4,15 +4,15 @@ import { useAuth } from "../components/auth-context";
 
 const Upload: React.FC = () => {
   const navigate = useNavigate();
-  const { token } = useAuth();
+  const { token, isLoading } = useAuth();
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!token) {
+    if (!isLoading && !token) {
       navigate("/login");
     }
-  }, [token, navigate]);
+  }, [isLoading, token, navigate]);
 
   useEffect(() => {
     if (file) {
@@ -70,8 +70,8 @@ const Upload: React.FC = () => {
     }
   };
 
-  if (!token) {
-    return null;
+  if (isLoading) {
+    return <div>Loading...</div>;
   }
 
   return (
@@ -93,9 +93,7 @@ const Upload: React.FC = () => {
           }}
         >
           {!preview && (
-            <span className="text-sm font-semibold text-foreground">
-              SELECT IMAGE
-            </span>
+            <span className="text-sm text-foreground">SELECT IMAGE</span>
           )}
         </div>
         <input
