@@ -8,9 +8,7 @@ interface ImageProp {
 }
 
 interface ImagesProps {
-  images: {
-    [key: string]: ImageProp;
-  };
+  images: Record<string, ImageProp>;
 }
 
 function getWindowDimensions() {
@@ -45,7 +43,7 @@ const Gallery: React.FC<ImagesProps> = ({ images }) => {
   return (
     <div className="w-full">
       <Masonry columnsCount={columns}>
-        {Object.entries(images).map(([_, { image_url, image_drive_id }], i) => (
+        {Object.entries(images).map(([i, { image_url, image_drive_id }]) => (
           <a key={i} href={image_drive_id}>
             <div className="img-container">
               <img

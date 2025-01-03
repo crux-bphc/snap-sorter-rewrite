@@ -4,3 +4,4 @@ export const backendUrl: string =
 export const loginEndpoint = `${backendUrl}/google-login`;
 export const resultsEndpoint = `${backendUrl}/get_user_results`;
 export const uploadEndpoint = `${backendUrl}/upload`;
+export const clusterSamplesEndpoint = `${backendUrl}/cluster_samples`;
