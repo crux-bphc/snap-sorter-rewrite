@@ -12,7 +12,7 @@ const RedirectHandler: React.FC = () => {
 
     if (token) {
       setToken(token);
-      navigate("/");
+      navigate("/upload");
     } else {
       console.error("No token found in URL");
     }

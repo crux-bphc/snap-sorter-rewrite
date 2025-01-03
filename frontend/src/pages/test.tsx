@@ -1,5 +1,4 @@
 import React from "react";
-import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 
 import "~/styles/gallery.css";
 import Gallery from "../components/gallery";

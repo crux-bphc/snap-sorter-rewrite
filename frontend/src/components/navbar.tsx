@@ -11,14 +11,14 @@ const Navbar: React.FC = () => {
         <h1 className="text-2xl md:text-3xl">SNAPSORTER</h1>
 
         <nav className="hidden space-x-8 md:flex">
-          <a href="/search" className="hover:text-gray-400">
+          <a href="/upload" className="hover:text-gray-400">
             SEARCH
           </a>
-          <a href="/dashboard" className="hover:text-gray-400">
+          <a href="/upload" className="hover:text-gray-400">
             DASHBOARD
           </a>
           {token ? (
-            <a href="/profile" className="hover:text-gray-400">
+            <a href="/upload" className="hover:text-gray-400">
               MY PROFILE
             </a>
           ) : (
@@ -51,14 +51,14 @@ const Navbar: React.FC = () => {
 
       {isMenuOpen && (
         <div className="absolute right-4 top-14 z-50 bg-background px-4 py-4 text-right text-foreground shadow-lg">
-          <a href="#search" className="block py-2 hover:text-gray-400">
+          <a href="/upload" className="block py-2 hover:text-gray-400">
             SEARCH
           </a>
-          <a href="/dashboard" className="block py-2 hover:text-gray-400">
+          <a href="/upload" className="block py-2 hover:text-gray-400">
             DASHBOARD
           </a>
           {token ? (
-            <a href="/profile" className="block py-2 hover:text-gray-400">
+            <a href="/upload" className="block py-2 hover:text-gray-400">
               MY PROFILE
             </a>
           ) : (
