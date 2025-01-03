@@ -57,7 +57,15 @@ const Results: React.FC = () => {
           <Gallery images={images.images} />
         </div>
       ) : (
-        <div>No images found</div>
+        <div
+          className="flex min-h-[calc(100vh-6rem)] w-full items-center justify-center text-xl"
+          onClick={() => navigate("/upload")}
+          style={{ cursor: "pointer" }}
+        >
+          {document.referrer.includes("/redirect")
+            ? "No images found, please upload your image (click here)"
+            : "No images match, please upload a different image (click here)"}
+        </div>
       )}
     </div>
   );
