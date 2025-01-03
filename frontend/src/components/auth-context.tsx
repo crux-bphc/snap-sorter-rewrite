@@ -6,31 +6,38 @@ import React, {
   useEffect,
 } from "react";
 import { getCookie, setCookie, deleteCookie } from "../utils/cookieUtils";
+import { jwtDecode } from "jwt-decode";
 
 interface AuthContextProps {
   token: string | null;
   setToken: (token: string | null) => void;
-  isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
+const isValid = (token: string): boolean => {
+  try {
+    const { exp } = jwtDecode(token);
+    return !!exp && exp > Date.now() / 1000;
+  } catch {
+    return false;
+  }
+};
+
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [token, setTokenState] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [token, setTokenState] = useState<string | null>(getCookie("token"));
 
   useEffect(() => {
-    const storedToken = getCookie("token");
-    if (storedToken) {
-      setTokenState(storedToken);
+    const token = getCookie("token");
+    if (token && !isValid(token)) {
+      setToken(null);
     }
-    setIsLoading(false);
   }, []);
 
   const setToken = (newToken: string | null) => {
-    if (newToken) {
+    if (newToken && isValid(newToken)) {
       setCookie("token", newToken, 7); // 7 days
     } else {
       deleteCookie("token");
@@ -39,7 +46,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   return (
-    <AuthContext.Provider value={{ token, setToken, isLoading }}>
+    <AuthContext.Provider value={{ token, setToken }}>
       {children}
     </AuthContext.Provider>
   );

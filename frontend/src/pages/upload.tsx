@@ -4,15 +4,9 @@ import { useAuth } from "../components/auth-context";
 
 const Upload: React.FC = () => {
   const navigate = useNavigate();
-  const { token, isLoading } = useAuth();
+  const { token } = useAuth();
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!isLoading && !token) {
-      navigate("/login");
-    }
-  }, [isLoading, token, navigate]);
 
   useEffect(() => {
     if (file) {
@@ -69,10 +63,6 @@ const Upload: React.FC = () => {
       alert("An error occurred. Please try again.");
     }
   };
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center bg-background p-4 text-foreground">
