@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "./auth-context";
+import { Link } from "react-router-dom";
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -8,24 +9,23 @@ const Navbar: React.FC = () => {
   return (
     <header className="top-0 z-10 bg-background text-foreground lg:sticky">
       <div className="container mx-auto flex items-center justify-between px-4 py-4">
-        <h1 className="text-2xl md:text-3xl">SNAPSORTER</h1>
+        <Link to="/" className="text-2xl uppercase md:text-3xl">
+          Snapsorter
+        </Link>
 
         <nav className="hidden space-x-8 md:flex">
-          <a href="/upload" className="hover:text-gray-400">
-            SEARCH
-          </a>
-          <a href="/results" className="hover:text-gray-400">
-            DASHBOARD
-          </a>
-          {token ? (
-            <a href="/results" className="hover:text-gray-400">
-              MY PROFILE
-            </a>
-          ) : (
-            <a href="/login" className="hover:text-gray-400">
-              LOGIN
-            </a>
-          )}
+          <Link to="/upload" className="uppercase hover:text-gray-400">
+            Search
+          </Link>
+          <Link to="/results" className="uppercase hover:text-gray-400">
+            Dashboard
+          </Link>
+          <Link
+            to={token ? "/results" : "/login"}
+            className="uppercase hover:text-gray-400"
+          >
+            {token ? "My profile" : "login"}
+          </Link>
         </nav>
 
         <button
@@ -51,21 +51,18 @@ const Navbar: React.FC = () => {
 
       {isMenuOpen && (
         <div className="absolute right-4 top-14 z-50 bg-background px-4 py-4 text-right text-foreground shadow-lg">
-          <a href="/upload" className="block py-2 hover:text-gray-400">
-            SEARCH
-          </a>
-          <a href="/results" className="block py-2 hover:text-gray-400">
-            DASHBOARD
-          </a>
-          {token ? (
-            <a href="/results" className="block py-2 hover:text-gray-400">
-              MY PROFILE
-            </a>
-          ) : (
-            <a href="/login" className="block py-2 hover:text-gray-400">
-              LOGIN
-            </a>
-          )}
+          <Link to="/upload" className="py-2 uppercase hover:text-gray-400">
+            Search
+          </Link>
+          <Link to="/results" className="py-2 uppercase hover:text-gray-400">
+            Dashboard
+          </Link>
+          <Link
+            to={token ? "/results" : "/login"}
+            className="py-2 uppercase hover:text-gray-400"
+          >
+            {token ? "My profile" : "login"}
+          </Link>
         </div>
       )}
     </header>

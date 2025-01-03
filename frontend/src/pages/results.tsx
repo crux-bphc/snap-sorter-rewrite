@@ -46,26 +46,26 @@ const Results: React.FC = () => {
     fetchImages();
   }, [token, isLoading, navigate]);
 
-  if (!loaded) {
-    return <div>Loading ...</div>;
-  }
-
   return (
-    <div className="flex w-full items-center justify-center">
-      {Object.keys(images.images).length > 0 ? (
-        <div className="w-[70vw]">
-          <Gallery images={images.images} />
-        </div>
+    <div className="flex w-full flex-1 items-center justify-center">
+      {loaded ? (
+        Object.keys(images.images).length > 0 ? (
+          <div className="w-[70vw]">
+            <Gallery images={images.images} />
+          </div>
+        ) : (
+          <div
+            className="flex w-full items-center justify-center text-xl"
+            onClick={() => navigate("/upload")}
+            style={{ cursor: "pointer" }}
+          >
+            {document.referrer.includes("/redirect")
+              ? "No images found, please upload your image (click here)"
+              : "No images match, please upload a different image (click here)"}
+          </div>
+        )
       ) : (
-        <div
-          className="flex min-h-[calc(100vh-6rem)] w-full items-center justify-center text-xl"
-          onClick={() => navigate("/upload")}
-          style={{ cursor: "pointer" }}
-        >
-          {document.referrer.includes("/redirect")
-            ? "No images found, please upload your image (click here)"
-            : "No images match, please upload a different image (click here)"}
-        </div>
+        "Loading..."
       )}
     </div>
   );
