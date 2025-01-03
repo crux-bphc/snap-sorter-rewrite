@@ -6,7 +6,7 @@ const Navbar: React.FC = () => {
   const { token } = useAuth();
 
   return (
-    <header className="top-0 bg-background text-foreground lg:sticky">
+    <header className="top-0 z-10 bg-background text-foreground lg:sticky">
       <div className="container mx-auto flex items-center justify-between px-4 py-4">
         <h1 className="text-2xl md:text-3xl">SNAPSORTER</h1>
 
