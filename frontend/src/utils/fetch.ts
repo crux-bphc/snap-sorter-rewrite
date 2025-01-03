@@ -1,9 +1,8 @@
-import { useAuth } from "../components/auth-context";
-
 type FetchOptions = {
   method?: "GET" | "POST" | "PUT" | "DELETE";
   headers?: Record<string, string>;
   body?: any;
+  token?: string;
 };
 
 /**
@@ -14,10 +13,8 @@ type FetchOptions = {
  */
 export const apiFetch = async <T>(
   endpoint: string,
-  options?: FetchOptions
+  options?: FetchOptions,
 ): Promise<T> => {
-  const { token } = useAuth();
-
   const backendUrl =
     import.meta.env.VITE_BACKEND_URL || "http://127.0.0.1:8000";
 
@@ -25,7 +22,7 @@ export const apiFetch = async <T>(
     method: options?.method || "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: token ? `Bearer ${token}` : "",
+      Authorization: options?.token ? `Bearer ${options.token}` : "",
       ...options?.headers,
     },
     body: options?.body ? JSON.stringify(options.body) : undefined,

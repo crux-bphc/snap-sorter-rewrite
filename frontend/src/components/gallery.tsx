@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
+import Masonry from "react-responsive-masonry";
 import "~/styles/gallery.css";
 
 interface ImageProp {
@@ -45,23 +45,21 @@ const Gallery: React.FC<ImagesProps> = ({ images }) => {
   return (
     <div className="w-full">
       <Masonry columnsCount={columns}>
-        {Object.entries(images).map(
-          ([key, { image_url, image_drive_id }], i) => (
-            <a key={i} href={image_drive_id}>
-              <div className="img-container">
-                <img
-                  src={image_url}
-                  style={{ width: "100%", display: "block" }}
-                  className="display-image p-1"
-                  alt=""
-                />
-                <div className="middle">
-                  <div className="text">Click to view on google drive</div>
-                </div>
+        {Object.entries(images).map(([_, { image_url, image_drive_id }], i) => (
+          <a key={i} href={image_drive_id}>
+            <div className="img-container">
+              <img
+                src={image_url}
+                style={{ width: "100%", display: "block" }}
+                className="display-image p-1"
+                alt=""
+              />
+              <div className="middle">
+                <div className="text">Click to view on google drive</div>
               </div>
-            </a>
-          ),
-        )}
+            </div>
+          </a>
+        ))}
       </Masonry>
     </div>
   );

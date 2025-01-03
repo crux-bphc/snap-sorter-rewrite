@@ -10,6 +10,7 @@ import { getCookie, setCookie, deleteCookie } from "../utils/cookieUtils";
 interface AuthContextProps {
   token: string | null;
   setToken: (token: string | null) => void;
+  isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -18,12 +19,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [token, setTokenState] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const storedToken = getCookie("token");
     if (storedToken) {
       setTokenState(storedToken);
     }
+    setIsLoading(false);
   }, []);
 
   const setToken = (newToken: string | null) => {
@@ -36,7 +39,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   return (
-    <AuthContext.Provider value={{ token, setToken }}>
+    <AuthContext.Provider value={{ token, setToken, isLoading }}>
       {children}
     </AuthContext.Provider>
   );
