@@ -75,7 +75,7 @@ const Upload: React.FC = () => {
   }
 
   return (
-    <div className="flex min-h-[calc(100vh-6rem)] flex-col items-center justify-center bg-background p-4 text-foreground">
+    <div className="flex flex-1 flex-col items-center justify-center bg-background p-4 text-foreground">
       <header className="mb-6 text-center">
         <h1 className="text-3xl">UPLOAD YOUR IMAGE</h1>
         <p className="mt-2 max-w-md">
@@ -83,19 +83,30 @@ const Upload: React.FC = () => {
         </p>
       </header>
       <div className="relative mb-4">
-        <div
-          className="relative flex h-48 w-48 cursor-pointer items-center justify-center border-2 border-dashed border-foreground hover:border-gray-700"
-          onClick={() => document.getElementById("fileInput")?.click()}
+        <label
+          htmlFor="fileInput"
+          className="relative flex h-48 w-48 cursor-pointer items-center justify-center border-2 border-dashed border-foreground text-sm text-foreground hover:border-gray-700"
           style={{
             backgroundImage: preview ? `url(${preview})` : undefined,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
+          onDrop={(event) => {
+            event.preventDefault();
+            if (event.dataTransfer.files[0]) {
+              setFile(event.dataTransfer.files[0]);
+            }
+          }}
+          onDragOver={(event) => {
+            console.log("hereee :3");
+            event.preventDefault();
+          }}
+          onDragEnter={(event) => {
+            event.preventDefault();
+          }}
         >
-          {!preview && (
-            <span className="text-sm text-foreground">SELECT IMAGE</span>
-          )}
-        </div>
+          {!preview && "SELECT IMAGE"}
+        </label>
         <input
           type="file"
           id="fileInput"
