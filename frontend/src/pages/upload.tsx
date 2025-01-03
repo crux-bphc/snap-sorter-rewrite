@@ -22,11 +22,7 @@ type ClusterSamples = Record<
 >;
 
 interface ErrorData {
-  detail: {
-    loc: (string | number)[];
-    msg: string;
-    type: string;
-  }[];
+  detail: string;
 }
 
 const Upload: React.FC = () => {
@@ -59,7 +55,7 @@ const Upload: React.FC = () => {
       if (isAxiosError(e)) {
         const err: AxiosError<ErrorData> = e;
         if (err.response?.data) {
-          errorMsg = err.response.data.detail[0].msg;
+          errorMsg = err.response.data.detail;
         }
       }
       alert(`Error: ${errorMsg}`);
@@ -82,7 +78,7 @@ const Upload: React.FC = () => {
       if (isAxiosError(e)) {
         const err: AxiosError<ErrorData> = e;
         if (err.response?.data) {
-          errorMsg = err.response.data.detail[0].msg;
+          errorMsg = err.response.data.detail;
         }
       }
       alert(`Error: ${errorMsg}`);
