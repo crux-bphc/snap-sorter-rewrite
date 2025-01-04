@@ -29,7 +29,6 @@ const Results: React.FC = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["results"],
     queryFn: fetchResults,
-    refetchOnMount: false,
     refetchOnWindowFocus: false,
   });
 
