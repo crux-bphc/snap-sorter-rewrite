@@ -2,6 +2,7 @@ import os
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from fastapi.responses import JSONResponse
+from sqlalchemy import update
 from sqlalchemy.orm import Session
 from api import oauth2, db_models, response_schemas
 from src.inference_pipeline import Inferencer
@@ -159,7 +160,8 @@ async def get_user_results(
     """
     Gets the image URLs of the images found for the user in the database. It returns the image URLs in the response.
     """
-    user_images = db.query(db_models.user_images).filter(db_models.user_images.c.user_id == current_user.id).all()
+    user_images = db.query(db_models.user_images).filter(db_models.user_images.c.user_id == current_user.id,
+                                                         db_models.user_images.c.false_positive == False).all()
     image_data = {}
     for user_image in user_images:
         image = db.query(db_models.Image).filter(db_models.Image.id == user_image.image_id).first()
@@ -171,3 +173,31 @@ async def get_user_results(
                     
     
     return {"images" :image_data}
+
+@router.post("/false_positive/{image_name}")
+async def mark_false_positive(
+    image_name: str,
+    db: Session = Depends(get_db),
+    current_user: int = Depends(oauth2.get_current_user),
+):
+    """
+    Marks an image as a false positive for the user. It takes the image name as a path parameter and marks it as a false positive
+    in the database.
+    """
+    image = db.query(db_models.Image).filter(db_models.Image.image_name == image_name).first()
+    if image:
+        user_image = db.query(db_models.user_images).filter(db_models.user_images.c.user_id == current_user.id, 
+                                                            db_models.user_images.c.image_id == image.id).first()
+        if user_image:
+            db.execute(
+                update(db_models.user_images)
+                .where(db_models.user_images.c.user_id == current_user.id)
+                .where(db_models.user_images.c.image_id == image.id)
+                .values(false_positive=True)
+            )
+            db.commit()
+            return JSONResponse(content={"message": "Image marked as false positive successfully"})
+        else:
+            raise HTTPException(status_code=404, detail="Image not found for the user")
+    else:
+        raise HTTPException(status_code=404, detail="Image not found in the database")

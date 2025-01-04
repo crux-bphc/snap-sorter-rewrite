@@ -1,4 +1,4 @@
-from sqlalchemy import JSON, Column, Integer, String, ForeignKey, Table
+from sqlalchemy import JSON, Boolean, Column, Integer, String, ForeignKey, Table
 from sqlalchemy.orm import relationship
 from .database import Base
 
@@ -8,6 +8,7 @@ user_images = Table(
     Base.metadata,
     Column("user_id", Integer, ForeignKey("users.id"), primary_key=True),
     Column("image_id", Integer, ForeignKey("images.id"), primary_key=True),
+    Column("false_positive", Boolean, default=False, nullable=False),
 )
 
 
