@@ -88,6 +88,7 @@ async def upload_image(
 
     cropped_face_path = inferencer.process_image(USER_IMG_PATH)
     if not cropped_face_path:
+        inferencer.delete_test_image(USER_IMG_PATH, None)
         raise HTTPException(status_code=400, detail="No face detected in the uploaded image. Try again.")
     
     response, clustering_results = inferencer.find_cluster(cropped_face_path)
