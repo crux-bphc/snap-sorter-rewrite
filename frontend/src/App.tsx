@@ -8,6 +8,7 @@ import Landing from "./pages/landing";
 import Test from "./pages/test";
 import Upload from "./pages/upload";
 import Results from "./pages/results";
+import Protected from "./components/protected";
 
 const queryClient = new QueryClient();
 
@@ -21,9 +22,11 @@ function App() {
             <Route path="/" element={<Landing />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/test" element={<Test />} />
-            <Route path="/upload" element={<Upload />} />
             <Route path="/redirect" element={<RedirectHandler />} />
-            <Route path="/results" element={<Results />} />
+            <Route path="/" element={<Protected />}>
+              <Route path="/upload" element={<Upload />} />
+              <Route path="/results" element={<Results />} />
+            </Route>
           </Routes>
         </Router>
       </AuthProvider>

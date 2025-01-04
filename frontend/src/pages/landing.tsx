@@ -28,7 +28,7 @@ const Landing: React.FC = () => {
       ref={mainRef}
     >
       <div className="left-0 top-[68px] flex w-2/3 lg:sticky lg:h-[calc(100dvh-68px)]">
-        <div className="image-container relative aspect-square max-h-full max-w-full self-end">
+        <div className="image-container relative aspect-square max-h-full max-w-full select-none self-end">
           <img
             className="landing-image h-full w-full object-contain opacity-[var(--op)]"
             src={LandingPic}

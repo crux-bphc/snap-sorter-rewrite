@@ -61,14 +61,17 @@
     console.log(selectedImages); // Debugging log
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/update_user_selected_images", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify(selectedImages), // Send only the array of images
-      });
+      const response = await fetch(
+        "http://127.0.0.1:8000/update_user_selected_images",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify(selectedImages), // Send only the array of images
+        }
+      );
 
       if (response.ok) {
         window.location.href = "#/result";
@@ -87,7 +90,10 @@
 <main>
   <header>
     <h1>Select Images</h1>
-    <p>Choose the clusters you identify with below. Multiple selections are allowed.</p>
+    <p>
+      Choose the clusters you identify with below. Multiple selections are
+      allowed.
+    </p>
     {#if errorMessage}
       <p class="error">{errorMessage}</p>
     {/if}

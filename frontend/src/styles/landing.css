@@ -48,7 +48,7 @@
   .image-container {
     --time: 0.6s;
     --timing: ease;
-    --mask-margin: 4px;
+    --mask-margin: 8px;
     animation: slide-frame var(--time) var(--timing) 0.1s;
     &::before {
       --y-pos: calc((100% - var(--msize) * 706 / 352) / 2);
