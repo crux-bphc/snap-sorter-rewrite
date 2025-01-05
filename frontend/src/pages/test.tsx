@@ -1,6 +1,5 @@
 import React from "react";
 
-import "~/styles/gallery.css";
 import Gallery from "../components/gallery";
 const images = {
   image1: {
