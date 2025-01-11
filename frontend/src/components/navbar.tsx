@@ -4,7 +4,6 @@ import { useAuth } from "./auth-context";
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { token } = useAuth();
-  console.log("token", token);
   return (
     <header className="top-0 z-10 bg-background text-foreground lg:sticky">
       <div className="container mx-auto flex items-center justify-between px-4 py-4">
