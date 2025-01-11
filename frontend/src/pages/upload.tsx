@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../components/auth-context";
+import { Upload as UploadIcon } from "lucide-react";
 
 const Upload: React.FC = () => {
   const navigate = useNavigate();
@@ -76,26 +77,18 @@ const Upload: React.FC = () => {
 
   return (
     <div className="flex min-h-[calc(100vh-6rem)] flex-col items-center justify-center bg-background p-4 text-foreground">
-      <header className="mb-6 text-center">
-        <h1 className="text-3xl">UPLOAD YOUR IMAGE</h1>
-        <p className="mt-2 max-w-md">
-          Select an image to identify your cluster of photos.
-        </p>
-      </header>
-      <div className="relative mb-4">
-        <div
-          className="relative flex h-48 w-48 cursor-pointer items-center justify-center border-2 border-dashed border-foreground hover:border-gray-700"
-          onClick={() => document.getElementById("fileInput")?.click()}
-          style={{
-            backgroundImage: preview ? `url(${preview})` : undefined,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        >
-          {!preview && (
-            <span className="text-sm text-foreground">SELECT IMAGE</span>
-          )}
-        </div>
+      <fieldset className="flex w-4/5 flex-col items-center justify-center border border-foreground p-8 md:w-2/5 lg:w-2/5">
+        <legend className="m-auto flex flex-col items-center justify-center">
+          <h1 className="text-md mt-6 text-center md:text-4xl">
+            UPLOAD YOUR IMAGE
+          </h1>
+          <p className="flex text-center text-sm md:text-lg">
+            Select an image to identify your cluster of photos.
+          </p>
+        </legend>
+      </fieldset>
+
+      <div className="flex w-4/5 flex-col items-center justify-center gap-4 border-x-[1px] border-b-[1px] border-foreground px-16 py-12 md:w-2/5 lg:w-2/5">
         <input
           type="file"
           id="fileInput"
@@ -103,15 +96,39 @@ const Upload: React.FC = () => {
           onChange={handleFileSelect}
           className="hidden"
         />
+        {!preview ? (
+          <button onClick={() => document.getElementById("fileInput")?.click()}>
+            <UploadIcon size={48} />
+          </button>
+        ) : (
+          <div>
+            <img src={preview} alt="preview" className="mb-2 h-48 w-48" />
+          </div>
+        )}
+        {file ? (
+          <div className="flex flex-col gap-8 md:flex-row">
+            <button
+              onClick={() => {
+                setFile(null);
+                setPreview(null);
+              }}
+              className="text-xl hover:text-red-500"
+            >
+              Remove
+            </button>
+            <button
+              onClick={handleUpload}
+              className="text-xl hover:text-green-500"
+            >
+              Upload
+            </button>
+          </div>
+        ) : (
+          <p className="mt-2 text-center text-sm md:text-lg">
+            Upload an image from your computer
+          </p>
+        )}
       </div>
-      <button
-        onClick={handleUpload}
-        className="bg-foreground px-8 py-2 text-lg font-semibold text-background shadow transition-colors hover:bg-gray-400 disabled:bg-red-400"
-        disabled={!file}
-        hidden={!file}
-      >
-        UPLOAD
-      </button>
     </div>
   );
 };

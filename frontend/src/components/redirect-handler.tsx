@@ -9,7 +9,7 @@ const RedirectHandler: React.FC = () => {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const token = params.get("token");
-
+    console.log("Token found in URL", token);
     if (token) {
       setToken(token);
       navigate("/results");

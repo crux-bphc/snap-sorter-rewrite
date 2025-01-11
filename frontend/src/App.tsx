@@ -5,7 +5,6 @@ import { AuthProvider } from "./components/auth-context";
 import LoginPage from "./pages/login";
 import RedirectHandler from "./components/redirect-handler";
 import Landing from "./pages/landing";
-import Test from "./pages/test";
 import Upload from "./pages/upload";
 import Results from "./pages/results";
 
@@ -20,7 +19,6 @@ function App() {
           <Routes>
             <Route path="/" element={<Landing />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/test" element={<Test />} />
             <Route path="/upload" element={<Upload />} />
             <Route path="/redirect" element={<RedirectHandler />} />
             <Route path="/results" element={<Results />} />
