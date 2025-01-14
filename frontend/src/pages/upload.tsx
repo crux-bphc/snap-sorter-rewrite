@@ -120,7 +120,7 @@ const Upload: React.FC = () => {
         <>
           <fieldset className="flex w-4/5 flex-col items-center justify-center border border-foreground p-8 md:w-2/5 lg:w-2/5">
             <legend className="m-auto flex flex-col items-center justify-center">
-              <h1 className="text-md mt-6 text-center md:text-4xl">
+              <h1 className="text-lg mt-6 text-center sm:text-4xl">
                 UPLOAD YOUR IMAGE
               </h1>
               <p className="flex text-center text-sm md:text-lg">
@@ -189,6 +189,55 @@ const Upload: React.FC = () => {
           </div>
         </>
       ) : (
+        // <>
+        //   <header className="text-center">
+        //     <h1 className="text-3xl">UPLOAD YOUR IMAGE</h1>
+        //     <p className="mt-2 max-w-md">
+        //       Select an image to identify your cluster of photos.
+        //     </p>
+        //   </header>
+        //   <div className="relative">
+        //     <label
+        //       htmlFor="fileInput"
+        //       className="relative flex h-48 w-48 cursor-pointer items-center justify-center border-2 border-dashed border-foreground text-sm text-foreground hover:border-gray-700"
+        //       style={{
+        //         backgroundImage: preview ? `url(${preview})` : undefined,
+        //         backgroundSize: "cover",
+        //         backgroundPosition: "center",
+        //       }}
+        //       onDrop={(event) => {
+        //         event.preventDefault();
+        //         if (event.dataTransfer.files[0]) {
+        //           setFile(event.dataTransfer.files[0]);
+        //         }
+        //       }}
+        //       onDragOver={(event) => {
+        //         console.log("hereee :3");
+        //         event.preventDefault();
+        //       }}
+        //       onDragEnter={(event) => {
+        //         event.preventDefault();
+        //       }}
+        //     >
+        //       {!preview && "SELECT IMAGE"}
+        //     </label>
+        //     <input
+        //       type="file"
+        //       id="fileInput"
+        //       accept="image/*"
+        //       onChange={handleFileSelect}
+        //       className="hidden"
+        //     />
+        //   </div>
+        //   <button
+        //     onClick={handleUpload}
+        //     className="bg-foreground px-8 py-2 text-lg font-semibold text-background shadow transition-colors hover:bg-gray-400 disabled:bg-red-400"
+        //     disabled={!file}
+        //     hidden={!file}
+        //   >
+        //     UPLOAD
+        //   </button>
+        // </>
         <Select samples={clusterSamples} />
       )}
     </div>
