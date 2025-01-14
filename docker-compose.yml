@@ -1,0 +1,47 @@
+version: '3.8'
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/clusters:/app/clusters
+      - ./backend/data/images:/app/data/images
+      - ./backend/inferencing:/app/inferencing
+
+    environment:
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - SESSION_SECRET_KEY=${SESSION_SECRET_KEY}
+      - FRONTEND_REDIRECT_URI=${FRONTEND_REDIRECT_URI}
+      - IMAGES_BASE_URL=${IMAGES_BASE_URL}
+      - STATIC_BASE_URL=${STATIC_BASE_URL}
+      - OAUTH2_SECRET_KEY=${OAUTH2_SECRET_KEY}
+      - OAUTH2_ALGORITHM=${OAUTH2_ALGORITHM}
+      - OAUTH2_EXPIRATION_MINUTES=${OAUTH2_EXPIRATION_MINUTES}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_HOST=postgres
+      - DB_PORT=5432
+    depends_on:
+      - postgres
+    
+    command: uvicorn main:app --host 0.0.0.0 --port 8000
+
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:
+    driver: local

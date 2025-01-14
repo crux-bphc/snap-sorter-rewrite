@@ -5,17 +5,18 @@ from authlib.integrations.starlette_client import OAuth
 from starlette.config import Config
 from ..database import get_db
 from .. import db_models, oauth2
+import os
 
 router = APIRouter(
     tags = ["Auth"]
 )
 
-config = Config(".env")
-oauth = OAuth(config)
+
+oauth = OAuth()
 google = oauth.register(
     name="google",
-    client_id=config.get("GOOGLE_CLIENT_ID"),
-    client_secret=config.get("GOOGLE_CLIENT_SECRET"),
+    client_id=os.getenv("GOOGLE_CLIENT_ID"),
+    client_secret=os.getenv("GOOGLE_CLIENT_SECRET"),
     server_metadata_url="https://accounts.google.com/.well-known/openid-configuration",
     client_kwargs={"scope": "openid email profile"},
 )
@@ -54,7 +55,7 @@ async def google_auth(request: Request, db: Session = Depends(get_db)):
             db.refresh(user)
 
         access_token = oauth2.create_access_token(data={"user_id": user.id})
-        frontend_redirect_url = f'{config.get("FRONTEND_REDIRECT_URI")}?token={access_token}'
+        frontend_redirect_url = f'{os.getenv("FRONTEND_REDIRECT_URI")}?token={access_token}'
         print(frontend_redirect_url)
         return RedirectResponse(frontend_redirect_url)
 
