@@ -1,5 +1,5 @@
 export const backendUrl: string =
-  (import.meta.env.VITE_BACKEND_URL as string) ?? "http://127.0.0.1:8000";
+  (import.meta.env.VITE_BACKEND_URL as string) ?? "http://localhost:8000";
 
 export const loginEndpoint = `/google-login`;
 export const resultsEndpoint = `/get_user_results`;
