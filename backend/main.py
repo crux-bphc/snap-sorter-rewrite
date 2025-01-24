@@ -17,11 +17,7 @@ app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
 app.mount("/static", StaticFiles(directory="clusters"), name="static")
 app.mount("/images", StaticFiles(directory="data/images"), name="images")
 
-origins = [
-    "http://localhost:8080",
-    "http://127.0.0.1:5173",
-    "http://localhost:5173",
-]
+origins = origins = os.getenv("CORS_ORIGINS", "").split(",")
 
 app.add_middleware(
     CORSMiddleware,
