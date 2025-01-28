@@ -122,10 +122,10 @@ class Inferencer():
                 print(f"Average similarity score with cluster images: {avg_similarity_score}")
                 clustering_results["similarity_scores"].append(round(float(avg_similarity_score), 5))
 
-                # TODO: keep 70% as threshold and for threshold between 60 to 70, prompt the user to choose
+                # TODO: keep 70% as threshold and for threshold between 50 to 70, prompt the user to choose
                 if avg_similarity_score > 0.7:
                     high_confidence_result.extend(image_name)
-                elif avg_similarity_score > 0.6:
+                elif avg_similarity_score > 0.5:
                     intermediate_confidence_result[i + 1] = {
                     "cluster": int(nearest_cluster), # if this shit is not converted to python int, it raises JSON not serializable in API
                     "images": image_name
