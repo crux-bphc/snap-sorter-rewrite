@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import "~/styles/landing.css";
 import LandingPic from "~/assets/landing.webp";
+import { Link } from "react-router-dom";
 
 const Landing: React.FC = () => {
   const mainRef = useRef<HTMLDivElement>(null);
@@ -39,14 +40,14 @@ const Landing: React.FC = () => {
       <div className="w-full overflow-x-clip max-lg:py-4 lg:h-[200vh] lg:w-1/3">
         <div className="top-[68px] flex grid-cols-2 flex-col lg:sticky lg:grid lg:h-[calc(100dvh-68px)] lg:w-[200%] lg:translate-x-[calc(var(--divscroll)*-1)]">
           <div className="flex flex-col justify-center gap-10 max-lg:items-center max-lg:text-center">
-            <div className="text-lg">
+            <div className="text-lg"> 
               Upload your photo and instantly find yourself in your batch snaps
               with SnapSorter!
             </div>
             <div className="flex gap-6">
-              <a href="/upload" className="underline underline-offset-4 hover:cursor-pointer">
+              <Link to="/upload" className="underline underline-offset-4 hover:cursor-pointer">
                 Get started
-              </a>
+              </Link>
               <button
                 className="underline underline-offset-4"
                 onClick={() =>
@@ -65,9 +66,9 @@ const Landing: React.FC = () => {
           <div className="flex flex-col items-center justify-center gap-10 text-center">
             <p>
               1. Upload images{" "}
-              <a href="/upload" className="underline underline-offset-4">
+              <Link to="/upload" className="underline underline-offset-4">
                 here
-              </a>
+              </Link>
             </p>
             <p>
               2. Upload a high quality image of yourself in order to get the
