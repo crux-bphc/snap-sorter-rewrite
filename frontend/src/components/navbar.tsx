@@ -21,10 +21,10 @@ const Navbar: React.FC = () => {
             Dashboard
           </Link>
           <Link
-            to={token ? "/results" : "/login"}
+            to={token ? "/profile" : "/login"}
             className="uppercase hover:text-gray-400"
           >
-            {token ? "My profile" : "login"}
+            {token ? "my profile" : "login"}
           </Link>
         </nav>
 
@@ -58,7 +58,7 @@ const Navbar: React.FC = () => {
             Dashboard
           </Link>
           <Link
-            to={token ? "/results" : "/login"}
+            to={token ? "/profile" : "/login"}
             className="py-2 uppercase hover:text-gray-400"
           >
             {token ? "My profile" : "login"}

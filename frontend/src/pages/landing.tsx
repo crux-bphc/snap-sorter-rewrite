@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import "~/styles/landing.css";
 import LandingPic from "~/assets/landing.webp";
+import { Link } from "react-router-dom";
 
 const Landing: React.FC = () => {
   const mainRef = useRef<HTMLDivElement>(null);
@@ -39,14 +40,14 @@ const Landing: React.FC = () => {
       <div className="w-full overflow-x-clip max-lg:py-4 lg:h-[200vh] lg:w-1/3">
         <div className="top-[68px] flex grid-cols-2 flex-col lg:sticky lg:grid lg:h-[calc(100dvh-68px)] lg:w-[200%] lg:translate-x-[calc(var(--divscroll)*-1)]">
           <div className="flex flex-col justify-center gap-10 max-lg:items-center max-lg:text-center">
-            <div>
-              Description: lorem ipsum dolor sit amet, consectetur adipiscing
-              elit, consectetur adipiscing, elit.
+            <div className="text-lg"> 
+              Upload your photo and instantly find yourself in your batch snaps
+              with SnapSorter!
             </div>
             <div className="flex gap-6">
-              <button className="underline underline-offset-4">
+              <Link to="/upload" className="underline underline-offset-4 hover:cursor-pointer">
                 Get started
-              </button>
+              </Link>
               <button
                 className="underline underline-offset-4"
                 onClick={() =>
@@ -64,20 +65,16 @@ const Landing: React.FC = () => {
           </div>
           <div className="flex flex-col items-center justify-center gap-10 text-center">
             <p>
-              1. upload images{" "}
-              <a href="#" className="underline underline-offset-4">
+              1. Upload a high quality image of yourself{" "}
+              <Link to="/upload" className="underline underline-offset-4">
                 here
-              </a>
+              </Link>
             </p>
             <p>
-              2. wait for lorem ipsum dolor sit amet, consectetur adipiscing
-              elit, consectetur adipiscing, elit.
+              2. Wait for SnapSnorter to work its magic!
             </p>
             <p>
-              3. search for your image and find it in our database{" "}
-              <a href="#" className="underline underline-offset-4">
-                here
-              </a>
+              3. Now you don't need to ask "bhai woh pictures bhej de na"
             </p>
           </div>
         </div>
