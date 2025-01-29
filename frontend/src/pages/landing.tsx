@@ -65,14 +65,16 @@ const Landing: React.FC = () => {
           </div>
           <div className="flex flex-col items-center justify-center gap-10 text-center">
             <p>
-              1. Upload images{" "}
+              1. Upload a high quality image of yourself{" "}
               <Link to="/upload" className="underline underline-offset-4">
                 here
               </Link>
             </p>
             <p>
-              2. Upload a high quality image of yourself in order to get the
-              most accurate results!
+              2. Wait for SnapSnorter to work its magic!
+            </p>
+            <p>
+              3. Now you don't need to ask "bhai woh pictures bhej de na"
             </p>
           </div>
         </div>
