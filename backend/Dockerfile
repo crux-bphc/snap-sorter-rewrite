@@ -7,9 +7,9 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-COPY requirements-prod.txt .
-RUN pip install --no-cache-dir -r requirements-prod.txt
+COPY ./backend/requirements-prod.txt .
+RUN --mount=type=cache,mode=0755,target=/root/.cache/pip pip install -r requirements-prod.txt
 
-COPY . .
+COPY ./backend .
 
 CMD uvicorn main:app --host 0.0.0.0 --port ${BACKEND_INTERNAL_PORT}
