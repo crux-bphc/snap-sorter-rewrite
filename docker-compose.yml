@@ -4,7 +4,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "${BACKEND_PORT}:8000"
+      - "${BACKEND_PORT}:${BACKEND_INTERNAL_PORT}"
     volumes:
       - ./backend/clusters:/app/clusters
       - ./backend/data/images:/app/data/images
@@ -19,9 +19,9 @@ services:
     env_file:
       - .env
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./postgres_data:/var/lib/postgresql/data
     ports:
-      - "${POSTGRES_PORT}:5432"
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
 
   frontend:
     build:
@@ -33,7 +33,3 @@ services:
       - .env
     depends_on:
       - postgres
-
-volumes:
-  postgres_data:
-    driver: local
