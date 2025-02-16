@@ -21,13 +21,13 @@ google = oauth.register(
     client_kwargs={"scope": "openid email profile"},
 )
 
-    
+
 @router.get("/google-login")
 async def google_login(request: Request):
     """
     Redirects the user to Google's OAuth
     """
-    redirect_uri = request.url_for("google_auth")
+    redirect_uri = f'{os.getenv("VITE_BACKEND_URL")}/google-auth'
     return await google.authorize_redirect(request, redirect_uri)
 
 
