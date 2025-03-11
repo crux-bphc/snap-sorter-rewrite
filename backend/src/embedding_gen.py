@@ -39,6 +39,7 @@ class EmbeddingGenerator():
             embedding_save_dir: Directory to save embeddings
         """
         images = [os.path.join(face_dir, f) for f in os.listdir(face_dir) if f.endswith(('jpg'))]
+        images = sorted(images)
         os.makedirs(embedding_save_dir, exist_ok=True)
 
         embeddings = []

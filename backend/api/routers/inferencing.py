@@ -5,7 +5,7 @@ from fastapi.responses import JSONResponse
 from sqlalchemy import update
 from sqlalchemy.orm import Session
 from api import oauth2, db_models, response_schemas
-from src.inference_pipeline import Inferencer
+from src.inference_pipeline_faiss import Inferencer
 from api.database import get_db
 import time
 
@@ -13,7 +13,7 @@ router = APIRouter(
     tags=["Core Functionality and Inferencing"]
 )
 
-inferencer = Inferencer(use_pca=True)
+inferencer = Inferencer()
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 BASE_CLUSTER_PATH = os.path.join(BASE_DIR, "clusters")
 STATIC_BASE_URL = os.getenv("STATIC_BASE_URL")
@@ -92,7 +92,7 @@ async def upload_image(
         inferencer.delete_test_image(USER_IMG_PATH, None)
         raise HTTPException(status_code=400, detail="No face detected in the uploaded image. Try again.")
     
-    response, clustering_results = inferencer.find_cluster(cropped_face_path)
+    response, clustering_results = inferencer.retrieve_images(cropped_face_path, threshold=0.70)
 
     update_user_results(db, current_user.id, cropped_face_path, clustering_results)
 
