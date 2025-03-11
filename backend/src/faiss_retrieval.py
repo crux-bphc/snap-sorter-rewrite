@@ -74,7 +74,7 @@ class FaissRetriever():
             for cluster in valid_clusters:
                 cluster_indices = [i for i, label in enumerate(cluster_labels) if label == cluster]
                 cluster_similarities = query_similarities[cluster_indices]
-                cluster_scores[cluster] = np.mean(cluster_similarities) * len(cluster_indices)
+                cluster_scores[cluster] = np.mean(cluster_similarities) * len(cluster_indices) 
 
             best_match_cluster = max(cluster_scores, key=cluster_scores.get)
             print(f"Best cluster chosen: {best_match_cluster} with avg similarity: {cluster_scores[best_match_cluster]:.4f}")
