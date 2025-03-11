@@ -45,10 +45,13 @@ class FaissRetriever():
         filtered_embeddings = np.load(os.path.join(faiss_index_event_path, "embeddings.npy"))[filtered_indices]
         filtered_image_paths = [image_paths[idx] for idx in filtered_indices]
 
-        # print scores and rank for filtered images
+        images_ranking = []
         for i, (idx, score) in enumerate(zip(I[0], D[0])):
             if score >= threshold:
                 print(f"Rank: {i}, Image: {image_paths[idx]}, Score: {score}")
+                images_ranking.append(image_paths[idx])
+        print(images_ranking)
+        
 
         if len(filtered_embeddings) == 0:
             print("No matches found above the similarity threshold.")
@@ -57,16 +60,36 @@ class FaissRetriever():
 
             print("Performing HDBSCAN clustering")
             distance_matrix = pairwise_distances(filtered_embeddings, metric="cosine").astype(np.float64)
-            clusterer = hdbscan.HDBSCAN(min_cluster_size=3, min_samples=1, metric="precomputed", allow_single_cluster=True)
+            clusterer = hdbscan.HDBSCAN(min_cluster_size=4, min_samples=3, metric="precomputed", allow_single_cluster=True)
             cluster_labels = clusterer.fit_predict(distance_matrix)
             print(cluster_labels)
+            print("[" + ", ".join([str(x) for x in cluster_labels]) + "]")
 
             query_similarities = cosine_similarity(query_embedding.reshape(1, -1), filtered_embeddings)[0]
-            best_match_idx = np.argmax(query_similarities)
-            best_match_cluster = cluster_labels[best_match_idx]
+            valid_clusters = set(cluster_labels) - {-1}
+            if not valid_clusters:
+                print("No valid clusters found, returning top-ranked images.")
+                return [img.split("_face")[0] for img in filtered_image_paths]
 
-            cluster_images = [filtered_image_paths[i].split("_face")[0] for i, label in enumerate(cluster_labels) if label == best_match_cluster]
-            print(cluster_images)
+            cluster_scores = {}
+            for cluster in valid_clusters:
+                cluster_indices = [i for i, label in enumerate(cluster_labels) if label == cluster]
+                cluster_similarities = query_similarities[cluster_indices]
+                cluster_scores[cluster] = np.mean(cluster_similarities)
+
+            best_match_cluster = max(cluster_scores, key=cluster_scores.get)
+            print(f"Best cluster chosen: {best_match_cluster} with avg similarity: {cluster_scores[best_match_cluster]:.4f}")
+
+            cluster_images = [
+                filtered_image_paths[i].split("_face")[0]
+                for i, label in enumerate(cluster_labels)
+                if label == best_match_cluster
+            ]
+
+            print("\nFinal ranked images from best cluster:")
+            for img in cluster_images:
+                print(img)
+
             return cluster_images
         
 # fr = FaissRetriever()
