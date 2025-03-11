@@ -1,9 +1,9 @@
 import faiss
 import numpy as np
 import os
-from sklearn.metrics.pairwise import pairwise_distances, cosine_similarity
+from sklearn.metrics.pairwise import cosine_similarity
 from src.embedding_gen import EmbeddingGenerator
-import hdbscan
+from sklearn.cluster import AgglomerativeClustering
 import json
 
 
@@ -58,10 +58,9 @@ class FaissRetriever():
             return None
         else:
 
-            print("Performing HDBSCAN clustering")
-            distance_matrix = pairwise_distances(filtered_embeddings, metric="cosine").astype(np.float64)
-            clusterer = hdbscan.HDBSCAN(min_cluster_size=4, min_samples=3, metric="precomputed", allow_single_cluster=True)
-            cluster_labels = clusterer.fit_predict(distance_matrix)
+            print("Performing clustering")
+            clustering = AgglomerativeClustering(n_clusters=None, distance_threshold=0.3, metric='cosine', linkage='average')
+            cluster_labels = clustering.fit_predict(filtered_embeddings)
             print(cluster_labels)
             print("[" + ", ".join([str(x) for x in cluster_labels]) + "]")
 
@@ -75,7 +74,7 @@ class FaissRetriever():
             for cluster in valid_clusters:
                 cluster_indices = [i for i, label in enumerate(cluster_labels) if label == cluster]
                 cluster_similarities = query_similarities[cluster_indices]
-                cluster_scores[cluster] = np.mean(cluster_similarities)
+                cluster_scores[cluster] = np.mean(cluster_similarities) * len(cluster_indices)
 
             best_match_cluster = max(cluster_scores, key=cluster_scores.get)
             print(f"Best cluster chosen: {best_match_cluster} with avg similarity: {cluster_scores[best_match_cluster]:.4f}")
