@@ -55,18 +55,6 @@ def update_user_images(db: Session, user_id: int, image_names: list[str], update
         db.rollback()
         print("Error occurred while updating user images:", e)
 
-def update_user_results(db: Session, user_id: int, user_face_path: str, clustering_results: dict):
-    if clustering_results:
-        user_cluster_data = db_models.UserFaceAndResult(
-            user_id=user_id,
-            user_face_path=user_face_path,
-            clusters=clustering_results["cluster_numbers"],
-            confidences=clustering_results["similarity_scores"]
-        )
-        db.add(user_cluster_data)
-        db.commit()
-        print("User results have been updated in the database.")
-
 
 @router.post("/upload", response_model=response_schemas.UploadImageResponse)
 async def upload_image(
@@ -92,20 +80,27 @@ async def upload_image(
         inferencer.delete_test_image(USER_IMG_PATH, None)
         raise HTTPException(status_code=400, detail="No face detected in the uploaded image. Try again.")
     
-    response, clustering_results = inferencer.retrieve_images(cropped_face_path, threshold=0.70)
-
-    update_user_results(db, current_user.id, cropped_face_path, clustering_results)
+    response = inferencer.retrieve_images(cropped_face_path, threshold=0.70)
 
     inferencer.delete_test_image(USER_IMG_PATH, cropped_face_path)
 
-    if response["intermediate_confidence"]:
-        response["message"] = "We need a bit of help to identify you in the following images."
-        update_user_images(db, current_user.id, response["high_confidence"], update=False)
-    else:
-        update_user_images(db, current_user.id, response["high_confidence"], update=False)
-        response["message"] = None
+    events = db.query(db_models.Event).order_by(db_models.Event.id.desc()).all()
 
-    return response
+    update_flag = False
+    for event in events:
+
+        if response[event.event_name]["intermediate_confidence"]:
+            response[event.event_name]["message"] = "We need a bit of help to identify you in the following images."
+            first_update = update_flag
+            update_user_images(db, current_user.id, response[event.event_name]["high_confidence"], update=first_update)
+            update_flag = True
+        else:
+            first_update = update_flag
+            update_user_images(db, current_user.id, response[event.event_name]["high_confidence"], update=first_update)
+            response[event.event_name]["message"] = None
+            update_flag = True
+    print(response[events[-1].event_name])
+    return response[events[-1].event_name]
 
 
 @router.post("/cluster_samples", response_model=response_schemas.ClusterSamplesResponse)
@@ -152,8 +147,21 @@ async def update_user_selected_images(
         return JSONResponse(content={"message": "No images selected to update"})
     
 
+@router.get("/get_events", response_model=response_schemas.EventsResponse)
+async def get_events(
+    db: Session = Depends(get_db),
+    current_user: int = Depends(oauth2.get_current_user),
+):
+    """
+    Gets the list of events in the database. It returns the event ID and event name in the response.
+    """
+    events = db.query(db_models.Event).all()
+    return {"events": [{"event_id": event.id, "event_name": event.event_name} for event in events]}
+
+
 @router.get("/get_user_results", response_model=response_schemas.UserResultsResponse)
 async def get_user_results(
+    event_id: int,
     db: Session = Depends(get_db),
     current_user: int = Depends(oauth2.get_current_user),
 ):
@@ -164,7 +172,8 @@ async def get_user_results(
                                                          db_models.user_images.c.false_positive == False).all()
     image_data = {}
     for user_image in user_images:
-        image = db.query(db_models.Image).filter(db_models.Image.id == user_image.image_id).first()
+        image = db.query(db_models.Image).filter(db_models.Image.id == user_image.image_id,
+                                                 db_models.Image.event_id == event_id).first()
         if image:
             image_data[image.image_name] = {
                 "image_url": f"{IMAGES_BASE_URL}/{image.image_name}",

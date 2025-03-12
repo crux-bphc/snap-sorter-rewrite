@@ -44,25 +44,15 @@ class Inferencer():
             images which contain the user face
         """
 
-        high_confidence_result = []
-        intermediate_confidence_result = {} #dictionary to store intermediate confidence images along with its day number and cluster number
-        clustering_results = {
-            "cluster_numbers": [0,0],
-            "similarity_scores": [0,0]
-        }
+        results = {}
 
         events = os.listdir(r"faiss_indexes")
         for event_name in events:
             event_results = self.faiss_retriever.retrieve_images(os.path.join("faiss_indexes", event_name), cropped_face_path, threshold=threshold)
             if event_results:
-                high_confidence_result.extend(event_results)
-                    
-        print(high_confidence_result)
-        results = {
-            "high_confidence": high_confidence_result,
-            "intermediate_confidence": intermediate_confidence_result
-        }
-        return results, clustering_results
+                results[event_name] = {"high_confidence": event_results, "intermediate_confidence": {}}
+
+        return results
         
     def delete_test_image(self, user_image_path, cropped_face_path):
         """
