@@ -10,7 +10,7 @@ df = pd.read_csv("imagedata.csv")
 with next(get_db()) as db:
     for index, row in df.iterrows():
         image = db_models.Image(
-            image_name=row["image_name"], image_id_drive=row["image_id"]
+            image_name=row["image_name"], image_id_drive=row["image_id"], event_id=row["event_id"]
         )
         db.add(image)
     db.commit()

@@ -40,7 +40,17 @@ class Image(Base):
     id = Column(Integer, primary_key=True, nullable=False)
     image_name = Column(String, nullable=False)
     image_id_drive = Column(String, nullable=False)
+    event_id = Column(Integer, ForeignKey("events.id"), nullable=True)
 
     users_found_in = relationship(
         "User", secondary=user_images, back_populates="found_in_images"
     )
+    event = relationship("Event", back_populates="images")
+
+
+class Event(Base):
+    __tablename__ = "events"
+    id = Column(Integer, primary_key=True, nullable=False)
+    event_name = Column(String, nullable=False, unique=True)
+
+    images = relationship("Image", back_populates="event")
