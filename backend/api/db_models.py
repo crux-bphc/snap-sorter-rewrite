@@ -54,3 +54,8 @@ class Event(Base):
     event_name = Column(String, nullable=False, unique=True)
 
     images = relationship("Image", back_populates="event")
+
+class Announcements(Base):
+    __tablename__ = "announcements"
+    id = Column(Integer, primary_key=True, nullable=False)
+    announcement = Column(String, nullable=False)

@@ -53,3 +53,6 @@ class EventItem(BaseModel):
 
 class EventsResponse(BaseModel):
     events: List[EventItem]
+
+class AnnouncementsResponse(BaseModel):
+    announcements: List[str]

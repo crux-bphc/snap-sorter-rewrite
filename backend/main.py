@@ -7,7 +7,7 @@ from starlette.middleware.sessions import SessionMiddleware
 from fastapi.staticfiles import StaticFiles
 from api import db_models
 from api.database import engine
-from api.routers import inferencing, auth
+from api.routers import inferencing, auth, dashboard
 
 
 db_models.Base.metadata.create_all(bind=engine)
@@ -36,6 +36,7 @@ app.add_middleware(
 
 app.include_router(auth.router)
 app.include_router(inferencing.router)
+app.include_router(dashboard.router)
 
 
 @app.get("/")
