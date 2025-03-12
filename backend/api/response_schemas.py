@@ -46,3 +46,10 @@ class UserResultsResponse(BaseModel):
 
     class Config:
         orm_mode = True
+
+class EventItem(BaseModel):
+    event_id: int
+    event_name: str
+
+class EventsResponse(BaseModel):
+    events: List[EventItem]
