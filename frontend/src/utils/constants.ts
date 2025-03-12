@@ -7,3 +7,4 @@ export const uploadEndpoint = `/upload`;
 export const clusterSamplesEndpoint = `/cluster_samples`;
 export const submitSamplesEndpoint = `/update_user_selected_images`;
 export const falsePositiveEndpoint = `/false_positive`;
+export const eventsEndpoint = `/get_events`;

@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../utils/api";
 import Gallery from "../components/gallery";
 import { useQuery } from "@tanstack/react-query";
-import { resultsEndpoint } from "../utils/constants";
+import { resultsEndpoint, eventsEndpoint } from "../utils/constants";
 
 interface ImageProp {
   image_url: string;
@@ -12,17 +12,35 @@ interface ImageProp {
 
 type Images = Record<string, ImageProp>;
 
-const fetchResults = async () => {
-  const res = await api.get<{ images: Images }>(resultsEndpoint);
+const fetchEvents = async () => {
+  const res = await api.get<{ events: { event_id: number; event_name: string }[] }>(eventsEndpoint);
+  return res.data.events;
+};
+
+const fetchResults = async (eventId: number) => {
+  const res = await api.get<{ images: Images }>(`${resultsEndpoint}?event_id=${eventId}`);
   return res.data;
 };
 
 const Results: React.FC = () => {
   const navigate = useNavigate();
+  const [eventId, setEventId] = useState<number | null>(null);
+
+  useEffect(() => {
+    const getHighestEventId = async () => {
+      const events = await fetchEvents();
+      if (events.length > 0) {
+        const highestEventId = Math.max(...events.map((event) => event.event_id));
+        setEventId(highestEventId);
+      }
+    };
+    getHighestEventId();
+  }, []);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["results"],
-    queryFn: fetchResults,
+    queryKey: ["results", eventId],
+    queryFn: () => fetchResults(eventId!),
+    enabled: eventId !== null,
     refetchOnWindowFocus: false,
   });
 
