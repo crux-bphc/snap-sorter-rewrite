@@ -1,10 +1,6 @@
-from typing import List
-from fastapi import APIRouter, Depends, HTTPException
-from fastapi.responses import JSONResponse
-from sqlalchemy import update
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from api import oauth2, db_models, response_schemas
-from src.inference_pipeline_faiss import Inferencer
 from api.database import get_db
 
 
