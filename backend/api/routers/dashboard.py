@@ -13,6 +13,9 @@ async def get_announcements(
     db: Session = Depends(get_db),
     current_user: int = Depends(oauth2.get_current_user)
 ):
+    """
+    Returns the latest 5 announcements in descending order
+    """
     announcements_object = db.query(db_models.Announcements).order_by(db_models.Announcements.id.desc()).limit(5).all()
     response = {}
     response["announcements"] = [announcement.announcement for announcement in announcements_object]

@@ -16,6 +16,9 @@ async def get_profile(
     db: Session = Depends(get_db),
     current_user: int = Depends(oauth2.get_current_user)
 ):
+    """
+    Returns the user's profile information and whether a zip download is available or not
+    """
     user = db.query(db_models.User).filter(db_models.User.id == current_user.id).first()
     if not user:
         raise HTTPException(
@@ -44,6 +47,9 @@ async def request_download(
     db: Session = Depends(get_db),
     current_user: int = Depends(oauth2.get_current_user)
 ):
+    """
+    Creates a zip file of the images found for the user in the specified events and returns a message
+    """
     os.makedirs("zip_files", exist_ok=True)
     record = db.query(db_models.ZipFileRecord).filter(db_models.ZipFileRecord.user_id == current_user.id).first()
     if record:
@@ -92,6 +98,9 @@ async def download_zip(
     db: Session = Depends(get_db),
     current_user: int = Depends(oauth2.get_current_user)
 ):
+    """
+    Downloads the zip file created for the user if available
+    """
     record = db.query(db_models.ZipFileRecord).filter(db_models.ZipFileRecord.user_id == current_user.id).first()
     if not record or not os.path.exists(record.file_path):
         raise HTTPException(
