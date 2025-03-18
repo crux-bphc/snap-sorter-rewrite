@@ -5,9 +5,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 from fastapi.staticfiles import StaticFiles
+from apscheduler.schedulers.background import BackgroundScheduler
 from api import db_models
-from api.database import engine
-from api.routers import inferencing, auth, dashboard
+from api.database import engine, session_local
+from api.routers import inferencing, auth, dashboard, profile
+from datetime import datetime, timedelta, timezone
 
 
 db_models.Base.metadata.create_all(bind=engine)
@@ -37,6 +39,46 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(inferencing.router)
 app.include_router(dashboard.router)
+app.include_router(profile.router)
+
+
+ZIP_SAVE_DIRECTORY = os.path.join("zip_files")
+
+def cleanup_zip_files():
+    db = session_local()
+    try:
+        two_hours_ago = datetime.now(timezone.utc) - timedelta(hours=2)
+        old_records = db.query(db_models.ZipFileRecord).filter(db_models.ZipFileRecord.timestamp < two_hours_ago).all()
+
+        for record in old_records:
+            if record.timestamp.tzinfo is None:
+                record_time = record.timestamp.replace(tzinfo=timezone.utc)
+            else:
+                record_time = record.timestamp.astimezone(timezone.utc)
+
+            print(f"Record timestamp: {record_time}, Two hours ago: {two_hours_ago}")
+
+            if record_time < two_hours_ago:
+                if os.path.exists(record.file_path):
+                    os.remove(record.file_path)
+                db.delete(record)
+        print(f"Cleaned {len(old_records)} old zip files")
+    
+    except Exception as e:
+        print(e)
+        db.rollback()
+
+    finally:
+        db.commit()
+        db.close()
+
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(cleanup_zip_files, "interval", hours=2, id="cleanup_job", replace_existing=True)
+scheduler.start()
+
+
+app.add_event_handler("shutdown", scheduler.shutdown)
 
 
 @app.get("/")
