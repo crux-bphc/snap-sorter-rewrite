@@ -56,3 +56,12 @@ class EventsResponse(BaseModel):
 
 class AnnouncementsResponse(BaseModel):
     announcements: List[str]
+
+class ProfileResponse(BaseModel):
+    email: str
+    first_name: str
+    last_name: str
+    download_available: bool
+
+class RequestDownloadResponse(BaseModel):
+    message: str

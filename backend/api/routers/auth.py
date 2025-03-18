@@ -42,6 +42,8 @@ async def google_auth(request: Request, db: Session = Depends(get_db)):
         token = await google.authorize_access_token(request)
         user_info = token.get("userinfo", {})
         email = user_info.get("email")
+        first_name = user_info.get("given_name", "")
+        last_name = user_info.get("family_name", "")
 
         if not email:
             raise HTTPException(
@@ -51,7 +53,7 @@ async def google_auth(request: Request, db: Session = Depends(get_db)):
 
         user = db.query(db_models.User).filter(db_models.User.email == email).first()
         if not user:
-            user = db_models.User(email=email)
+            user = db_models.User(email=email, first_name=first_name, last_name=last_name)
             db.add(user)
             db.commit()
             db.refresh(user)

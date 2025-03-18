@@ -1,5 +1,6 @@
-from sqlalchemy import JSON, Boolean, Column, Integer, String, ForeignKey, Table
+from sqlalchemy import JSON, Boolean, Column, Integer, String, ForeignKey, Table, DateTime
 from sqlalchemy.orm import relationship
+from datetime import datetime, timezone
 from .database import Base
 
 
@@ -15,13 +16,17 @@ user_images = Table(
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, nullable=False)
+    first_name = Column(String, nullable=False)
+    last_name = Column(String, nullable=False)
     email = Column(String, nullable=False, unique=True)
+    
     found_in_images = relationship(
         "Image", secondary=user_images, back_populates="users_found_in"
     )
     user_data = relationship(
         "UserFaceAndResult", back_populates="user", cascade="all, delete-orphan"
     )
+    zip_files = relationship("ZipFileRecord", back_populates="user", cascade="all, delete-orphan")
 
 
 class UserFaceAndResult(Base):
@@ -55,7 +60,18 @@ class Event(Base):
 
     images = relationship("Image", back_populates="event")
 
+
 class Announcements(Base):
     __tablename__ = "announcements"
     id = Column(Integer, primary_key=True, nullable=False)
     announcement = Column(String, nullable=False)
+
+
+class ZipFileRecord(Base):
+    __tablename__ = "zip_files"
+    id = Column(Integer, primary_key=True, nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    file_path = Column(String, nullable=False)
+    timestamp = Column(DateTime, default= lambda: datetime.now(timezone.utc), nullable=False)
+
+    user = relationship("User", back_populates="zip_files")
