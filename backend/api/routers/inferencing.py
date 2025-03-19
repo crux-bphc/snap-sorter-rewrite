@@ -80,7 +80,7 @@ async def upload_image(
         inferencer.delete_test_image(USER_IMG_PATH, None)
         raise HTTPException(status_code=400, detail="No face detected in the uploaded image. Try again.")
     
-    response = inferencer.retrieve_images(cropped_face_path, threshold=0.70)
+    response = inferencer.retrieve_images(cropped_face_path, threshold=0.60)
 
     inferencer.delete_test_image(USER_IMG_PATH, cropped_face_path)
 
