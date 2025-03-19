@@ -10,6 +10,7 @@ import Upload from "./pages/upload";
 import Results from "./pages/results";
 import Protected from "./components/protected";
 import Profile from "./pages/profile";
+import Dashboard from "./pages/dashboard";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ function App() {
             <Route path="/" element={<Protected />}>
               <Route path="/upload" element={<Upload />} />
               <Route path="/results" element={<Results />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/profile" element={<Profile />} />
             </Route>
           </Routes>
