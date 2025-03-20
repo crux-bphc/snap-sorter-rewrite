@@ -56,6 +56,16 @@ def update_user_images(db: Session, user_id: int, image_names: list[str], update
         print("Error occurred while updating user images:", e)
 
 
+def add_user_face_to_db(db: Session, user_id: int, user_face_path: str):
+    user_cluster_data = db_models.UserFaceAndResult(
+        user_id=user_id,
+        user_face_path=user_face_path
+    )
+    db.add(user_cluster_data)
+    db.commit()
+    print("User results have been updated in the database.")
+
+
 @router.post("/upload", response_model=response_schemas.UploadImageResponse)
 async def upload_image(
     file: UploadFile = File(...),
@@ -81,6 +91,7 @@ async def upload_image(
         raise HTTPException(status_code=400, detail="No face detected in the uploaded image. Try again.")
     
     response = inferencer.retrieve_images(cropped_face_path, threshold=0.60)
+    add_user_face_to_db(db, current_user.id, cropped_face_path)
 
     inferencer.delete_test_image(USER_IMG_PATH, cropped_face_path)
 
@@ -155,7 +166,7 @@ async def get_events(
     """
     Gets the list of events in the database. It returns the event ID and event name in the response.
     """
-    events = db.query(db_models.Event).all()
+    events = db.query(db_models.Event).order_by(db_models.Event.id.desc()).all()
     return {"events": [{"event_id": event.id, "event_name": event.event_name} for event in events]}
 
 
