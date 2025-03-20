@@ -5,7 +5,6 @@ import { announcementsEndpoint } from "../utils/constants";
 
 const fetchAnnouncements = async () => {
   const res = await api.get<{ announcements: string[] }>(announcementsEndpoint);
-  console.log(res.data);
   return res.data.announcements;
 };
 
