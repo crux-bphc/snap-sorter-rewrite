@@ -56,6 +56,12 @@ class FaissRetriever():
         if len(filtered_embeddings) == 0:
             print("No matches found above the similarity threshold.")
             return None
+        
+        elif len(filtered_embeddings) == 1:
+            if D[0][filtered_indices[0]] >= 0.7:
+                print("Only one match found above the similarity threshold.")
+                return [filtered_image_paths[0].split("_face")[0]]
+
         else:
 
             print("Performing clustering")
