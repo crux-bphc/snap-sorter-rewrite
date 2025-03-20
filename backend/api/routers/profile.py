@@ -29,8 +29,7 @@ async def get_profile(
     zip_record = db.query(db_models.ZipFileRecord).filter(db_models.ZipFileRecord.user_id == current_user.id).first()
     download_available = True if zip_record else False
     response = {
-        "first_name": user.first_name,
-        "last_name": user.last_name,
+        "name": user.first_name + " " + user.last_name,
         "email": user.email,
         "download_available": download_available
     }

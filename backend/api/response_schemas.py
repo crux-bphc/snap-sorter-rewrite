@@ -59,9 +59,15 @@ class AnnouncementsResponse(BaseModel):
 
 class ProfileResponse(BaseModel):
     email: str
-    first_name: str
-    last_name: str
+    name : str
     download_available: bool
 
 class RequestDownloadResponse(BaseModel):
     message: str
+
+class StatsResponse(BaseModel):
+    total_users: int
+    total_images: int
+    total_events: int
+    inference_count: int
+    zip_files: int
