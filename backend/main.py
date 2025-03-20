@@ -47,8 +47,8 @@ ZIP_SAVE_DIRECTORY = os.path.join("zip_files")
 def cleanup_zip_files():
     db = session_local()
     try:
-        two_hours_ago = datetime.now(timezone.utc) - timedelta(hours=2)
-        old_records = db.query(db_models.ZipFileRecord).filter(db_models.ZipFileRecord.timestamp < two_hours_ago).all()
+        thirty_minutes_ago = datetime.now(timezone.utc) - timedelta(minutes=30)
+        old_records = db.query(db_models.ZipFileRecord).filter(db_models.ZipFileRecord.timestamp < thirty_minutes_ago).all()
 
         for record in old_records:
             if record.timestamp.tzinfo is None:
@@ -56,9 +56,7 @@ def cleanup_zip_files():
             else:
                 record_time = record.timestamp.astimezone(timezone.utc)
 
-            print(f"Record timestamp: {record_time}, Two hours ago: {two_hours_ago}")
-
-            if record_time < two_hours_ago:
+            if record_time < thirty_minutes_ago:
                 if os.path.exists(record.file_path):
                     os.remove(record.file_path)
                 db.delete(record)
@@ -74,7 +72,7 @@ def cleanup_zip_files():
 
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(cleanup_zip_files, "interval", hours=2, id="cleanup_job", replace_existing=True)
+scheduler.add_job(cleanup_zip_files, "interval", minutes=30, id="cleanup_job", replace_existing=True)
 scheduler.start()
 
 
