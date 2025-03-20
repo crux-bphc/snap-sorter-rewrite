@@ -21,8 +21,8 @@ const Dashboard: React.FC = () => {
 
       <div className="m-auto w-full max-w-[90%] md:max-w-4xl">
         <div className="mb-8">
-          <h2 className="mb-4 text-right">Event Announcements</h2>
-          <div className="border border-gray-500 p-4">
+          <h2 className="mb-4 text-right text-2xl">Announcements</h2>
+          <div className="border border-white p-4">
             {isLoading ? (
               <p>Loading...</p>
             ) : announcements?.length ? (
