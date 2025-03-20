@@ -34,8 +34,6 @@ class UserFaceAndResult(Base):
     id = Column(Integer, primary_key=True, nullable=False)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     user_face_path = Column(String, nullable=False)
-    clusters = Column(JSON, nullable=True)
-    confidences = Column(JSON, nullable=True)
 
     user = relationship("User", back_populates="user_data")
 
