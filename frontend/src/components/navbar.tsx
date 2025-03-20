@@ -17,8 +17,11 @@ const Navbar: React.FC = () => {
           <Link to="/upload" className="uppercase hover:text-gray-400">
             Search
           </Link>
-          <Link to="/results" className="uppercase hover:text-gray-400">
+          <Link to="/dashboard" className="uppercase hover:text-gray-400">
             Dashboard
+          </Link>
+          <Link to="/results" className="uppercase hover:text-gray-400">
+            Results
           </Link>
           <Link
             to={token ? "/profile" : "/login"}
@@ -54,8 +57,11 @@ const Navbar: React.FC = () => {
           <Link to="/upload" className="py-2 uppercase hover:text-gray-400">
             Search
           </Link>
-          <Link to="/results" className="py-2 uppercase hover:text-gray-400">
+          <Link to="/dashboard" className="py-2 uppercase hover:text-gray-400">
             Dashboard
+          </Link>
+          <Link to="/results" className="py-2 uppercase hover:text-gray-400">
+            Results
           </Link>
           <Link
             to={token ? "/profile" : "/login"}
