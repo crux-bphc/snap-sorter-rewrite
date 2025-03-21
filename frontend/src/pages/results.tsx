@@ -65,7 +65,7 @@ const Results: React.FC = () => {
                 setSelected={setSelectedEvent}
               />
             </div>
-            <RequestDownloadDialog events={events} />
+            {events.length && <RequestDownloadDialog events={events} />}
           </div>
           {Object.keys(data?.images ?? {}).length > 0 ? (
             <div className="w-[70vw]">
