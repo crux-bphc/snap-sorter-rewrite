@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
-import { useEffect } from "react";
 
 export interface Event {
   event_id: number;
