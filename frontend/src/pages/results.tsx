@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { resultsEndpoint, eventsEndpoint } from "../utils/constants";
 import EventDropdown, { Event } from "../components/event-dropdown";
 import { useEffect } from "react";
+import RequestDownloadDialog from "../components/request-download-dialog";
 
 interface ImageProp {
   image_url: string;
@@ -55,13 +56,16 @@ const Results: React.FC = () => {
         "Loading..."
       ) : events?.length ? (
         <div className="flex flex-col items-center gap-6">
-          <div className="flex items-center gap-4">
-            Select event:
-            <EventDropdown
-              events={events}
-              selected={selectedEvent}
-              setSelected={setSelectedEvent}
-            />
+          <div className="flex w-full items-center justify-between">
+            <div className="flex items-center gap-4">
+              Select event:
+              <EventDropdown
+                events={events}
+                selected={selectedEvent}
+                setSelected={setSelectedEvent}
+              />
+            </div>
+            {events.length && <RequestDownloadDialog events={events} />}
           </div>
           {Object.keys(data?.images ?? {}).length > 0 ? (
             <div className="w-[70vw]">

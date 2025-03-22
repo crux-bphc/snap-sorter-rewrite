@@ -9,3 +9,5 @@ export const submitSamplesEndpoint = `/update_user_selected_images`;
 export const falsePositiveEndpoint = `/false_positive`;
 export const eventsEndpoint = `/get_events`;
 export const announcementsEndpoint = `/announcements`;
+export const requestDownloadEndpoint = `/request_download`;
+export const downloadEndpoint = `/download_zip`;
