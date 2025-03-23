@@ -1,3 +1,4 @@
 .env
 .env.dev
 .env.prod
+postgres_data

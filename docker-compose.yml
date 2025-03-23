@@ -6,7 +6,7 @@ services:
     ports:
       - "${BACKEND_PORT}:${BACKEND_INTERNAL_PORT}"
     volumes:
-      - ./backend/clusters:/app/clusters
+      - ./backend/faiss_indexes:/app/faiss_indexes
       - ./backend/data/images:/app/data/images
       - ./backend/inferencing:/app/inferencing
     env_file:

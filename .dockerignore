@@ -5,5 +5,7 @@
 **/*.pyc
 
 backend/data/
-backend/clusters/
+backend/faiss_indexes/
 backend/snapsorter/
+backend/.env
+frontend/node_modules/
