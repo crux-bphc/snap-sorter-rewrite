@@ -27,8 +27,8 @@ async def google_login(request: Request):
     """
     Redirects the user to Google's OAuth
     """
-    #redirect_uri = f'{os.getenv("VITE_BACKEND_URL")}/google-auth'
-    redirect_uri = f'http://127.0.0.1:8000/google-auth'
+    redirect_uri = f'{os.getenv("VITE_BACKEND_URL")}/google-auth'
+    #redirect_uri = f'http://127.0.0.1:8000/google-auth'
     print(redirect_uri)
     return await google.authorize_redirect(request, redirect_uri)
 
