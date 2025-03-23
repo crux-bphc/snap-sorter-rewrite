@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from api import oauth2, db_models, response_schemas
 from api.database import get_db
 import zipfile
+from datetime import datetime, timezone
 
 router = APIRouter(
     tags=["Profile Endpoints"]
@@ -53,7 +54,7 @@ async def request_download(
     record = db.query(db_models.ZipFileRecord).filter(db_models.ZipFileRecord.user_id == current_user.id).first()
     if record:
         response = {
-            "message": "You have already requested a download. You can request a new download after 30 minutes. Visit the Profile section to download the file."
+            "message": "You have already requested a download. You can request a new download after 5 minutes. Visit the Profile section to download the file."
         }
         return response
     else:
@@ -80,7 +81,7 @@ async def request_download(
             for image_path in image_paths:
                 zip_file.write(image_path, os.path.basename(image_path))
         
-        record = db_models.ZipFileRecord(user_id=current_user.id, file_path=zip_file_path)
+        record = db_models.ZipFileRecord(user_id=current_user.id, file_path=zip_file_path, timestamp=datetime.now(timezone.utc))
         db.add(record)
         db.commit()
         db.refresh(record)
@@ -107,4 +108,9 @@ async def download_zip(
             detail="No download request found"
         )
     
-    return FileResponse(path=record.file_path, filename=os.path.basename(record.file_path), media_type="application/zip")
+    return FileResponse(
+        path=record.file_path, 
+        filename=os.path.basename(record.file_path), 
+        media_type="application/zip",  
+        headers={"Cache-Control": "no-store, must-revalidate"}
+    )

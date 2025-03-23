@@ -70,6 +70,6 @@ class ZipFileRecord(Base):
     id = Column(Integer, primary_key=True, nullable=False)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     file_path = Column(String, nullable=False)
-    timestamp = Column(DateTime, default= lambda: datetime.now(timezone.utc), nullable=False)
+    timestamp = Column(DateTime(timezone=True), nullable=False)
 
     user = relationship("User", back_populates="zip_files")

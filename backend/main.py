@@ -14,8 +14,8 @@ from datetime import datetime, timedelta, timezone
 
 db_models.Base.metadata.create_all(bind=engine)
 
-# app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
-app = FastAPI()
+app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
+#app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="clusters"), name="static")
 app.mount("/images", StaticFiles(directory="data/images"), name="images")
@@ -47,32 +47,32 @@ ZIP_SAVE_DIRECTORY = os.path.join("zip_files")
 def cleanup_zip_files():
     db = session_local()
     try:
-        thirty_minutes_ago = datetime.now(timezone.utc) - timedelta(minutes=30)
-        old_records = db.query(db_models.ZipFileRecord).filter(db_models.ZipFileRecord.timestamp < thirty_minutes_ago).all()
+        five_minutes_ago = datetime.now(timezone.utc) - timedelta(minutes=5)
+        old_records = db.query(db_models.ZipFileRecord).all()
 
         for record in old_records:
-            if record.timestamp.tzinfo is None:
-                record_time = record.timestamp.replace(tzinfo=timezone.utc)
-            else:
-                record_time = record.timestamp.astimezone(timezone.utc)
+            record_time = record.timestamp.astimezone(timezone.utc)
 
-            if record_time < thirty_minutes_ago:
+            if record_time < five_minutes_ago:
                 if os.path.exists(record.file_path):
                     os.remove(record.file_path)
                 db.delete(record)
-        print(f"Cleaned {len(old_records)} old zip files")
+                print(f"Cleaned {len(old_records)} old zip files")
+            else:
+                print(f"No old zip files")
+
+        db.commit()
     
     except Exception as e:
         print(e)
         db.rollback()
 
     finally:
-        db.commit()
         db.close()
 
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(cleanup_zip_files, "interval", minutes=30, id="cleanup_job", replace_existing=True)
+scheduler.add_job(cleanup_zip_files, "interval", minutes = 4, id="cleanup_job", replace_existing=True)
 scheduler.start()
 
 
