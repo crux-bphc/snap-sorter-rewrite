@@ -13,7 +13,7 @@ interface ImageProp {
   image_drive_id: string;
 }
 
-type Images = Record<string, ImageProp>;
+export type Images = Record<string, ImageProp>;
 
 const fetchEvents = async () => {
   const res = await api.get<{
@@ -69,7 +69,10 @@ const Results: React.FC = () => {
           </div>
           {Object.keys(data?.images ?? {}).length > 0 ? (
             <div className="w-[70vw]">
-              <Gallery images={data?.images ?? {}} />
+              <Gallery
+                images={data?.images ?? {}}
+                selectedEventId={selectedEvent?.event_id ?? null}
+              />
             </div>
           ) : (
             <div

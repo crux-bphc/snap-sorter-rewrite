@@ -4,14 +4,11 @@ import Masonry from "react-responsive-masonry";
 import api from "../utils/api";
 import { falsePositiveEndpoint } from "../utils/constants";
 import { AxiosError, isAxiosError } from "axios";
+import { Images } from "../pages/results";
 
-interface ImageProp {
-  image_url: string;
-  image_drive_id: string;
-}
-
-interface ImagesProps {
-  images: Record<string, ImageProp>;
+interface GalleryProps {
+  images: Images;
+  selectedEventId: number | null;
 }
 
 function getWindowDimensions() {
@@ -39,21 +36,36 @@ function useWindowDimensions() {
   return windowDimensions;
 }
 
-const Gallery: React.FC<ImagesProps> = ({ images }) => {
+const Gallery: React.FC<GalleryProps> = ({ images, selectedEventId }) => {
   const { width } = useWindowDimensions();
   const queryClient = useQueryClient();
 
   const falsePositiveMutation = useMutation({
     mutationFn: async (image_name: string) =>
       (await api.post<string>(falsePositiveEndpoint + `/${image_name}`)).data,
-    onSuccess(_, image_name) {
-      queryClient.setQueryData<ImagesProps>(["results"], (prev) => {
-        if (!prev) return prev;
-        return {
-          images: Object.fromEntries(
-            Object.entries(prev.images).filter(([key]) => key !== image_name),
-          ),
-        };
+    onMutate(image_name) {
+      queryClient.cancelQueries({
+        queryKey: ["results", selectedEventId],
+      });
+      queryClient.setQueryData<{ images: Images }>(
+        ["results", selectedEventId],
+        (prev) => {
+          console.log(prev);
+          if (!prev) return prev;
+          return {
+            images: Object.fromEntries(
+              Object.entries(prev.images).filter(([key]) => {
+                console.log(key, image_name);
+                return key !== image_name;
+              }),
+            ),
+          };
+        },
+      );
+    },
+    onSuccess() {
+      queryClient.refetchQueries({
+        queryKey: ["results", selectedEventId],
       });
     },
     onError: (e) => {
