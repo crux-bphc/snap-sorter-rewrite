@@ -7,9 +7,7 @@ from ..database import get_db
 from .. import db_models, oauth2
 import os
 
-router = APIRouter(
-    tags = ["Auth"]
-)
+router = APIRouter(tags=["Auth"])
 
 
 oauth = OAuth()
@@ -28,8 +26,7 @@ async def google_login(request: Request):
     Redirects the user to Google's OAuth
     """
     redirect_uri = f'{os.getenv("VITE_BACKEND_URL")}/google-auth'
-    #redirect_uri = f'http://127.0.0.1:8000/google-auth'
-    print(redirect_uri)
+    # redirect_uri = f'http://127.0.0.1:8000/google-auth'
     return await google.authorize_redirect(request, redirect_uri)
 
 
@@ -53,13 +50,17 @@ async def google_auth(request: Request, db: Session = Depends(get_db)):
 
         user = db.query(db_models.User).filter(db_models.User.email == email).first()
         if not user:
-            user = db_models.User(email=email, first_name=first_name, last_name=last_name)
+            user = db_models.User(
+                email=email, first_name=first_name, last_name=last_name
+            )
             db.add(user)
             db.commit()
             db.refresh(user)
 
         access_token = oauth2.create_access_token(data={"user_id": user.id})
-        frontend_redirect_url = f'{os.getenv("FRONTEND_REDIRECT_URI")}?token={access_token}'
+        frontend_redirect_url = (
+            f'{os.getenv("FRONTEND_REDIRECT_URI")}?token={access_token}'
+        )
         print(frontend_redirect_url)
         return RedirectResponse(frontend_redirect_url)
 

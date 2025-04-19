@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import { useQuery } from "@tanstack/react-query";
 import api from "../utils/api";
 import { announcementsEndpoint } from "../utils/constants";
@@ -16,7 +16,9 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center">
-      <h1 className="mb-16 text-4xl tracking-widest">D A S H B O A R D</h1>
+      <h1 className="mb-16 text-2xl tracking-widest md:text-4xl">
+        D A S H B O A R D
+      </h1>
 
       <div className="m-auto w-full max-w-[90%] md:max-w-4xl">
         <div className="mb-8">
@@ -26,7 +28,10 @@ const Dashboard: React.FC = () => {
               <p>Loading...</p>
             ) : announcements?.length ? (
               announcements.map((announcement, index) => (
-                <div key={index} className="mb-2 flex items-center justify-end">
+                <div
+                  key={index + announcement}
+                  className="mb-2 flex items-center justify-end"
+                >
                   {index === 0 && (
                     <span className="mr-8 hidden text-sm md:inline-block">
                       NEW

@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../utils/api";
 import Gallery from "../components/gallery";
 import { useQuery } from "@tanstack/react-query";
 import { resultsEndpoint, eventsEndpoint } from "../utils/constants";
-import EventDropdown, { Event } from "../components/event-dropdown";
+import EventDropdown, { type Event } from "../components/event-dropdown";
 import { useEffect } from "react";
 import RequestDownloadDialog from "../components/request-download-dialog";
 
@@ -22,7 +23,8 @@ const fetchEvents = async () => {
   return res.data.events;
 };
 
-const fetchResults = async (eventId: number) => {
+const fetchResults = async (eventId?: number) => {
+  if (!eventId) return null;
   const res = await api.get<{ images: Images }>(
     `${resultsEndpoint}?event_id=${eventId}`,
   );
@@ -41,7 +43,7 @@ const Results: React.FC = () => {
 
   const { data, isLoading } = useQuery({
     queryKey: ["results", selectedEvent?.event_id ?? null],
-    queryFn: () => fetchResults(selectedEvent!.event_id),
+    queryFn: () => fetchResults(selectedEvent?.event_id),
     enabled: !!selectedEvent?.event_id,
     refetchOnWindowFocus: false,
   });
@@ -56,8 +58,8 @@ const Results: React.FC = () => {
         "Loading..."
       ) : events?.length ? (
         <div className="flex flex-col items-center gap-6">
-          <div className="flex w-full items-center justify-between">
-            <div className="flex items-center gap-4">
+          <div className="flex w-full items-center justify-between max-sm:flex-col max-sm:gap-4">
+            <div className="flex items-center gap-4 max-sm:flex-col">
               Select event:
               <EventDropdown
                 events={events}
@@ -75,14 +77,15 @@ const Results: React.FC = () => {
               />
             </div>
           ) : (
-            <div
+            <button
               className="flex w-full cursor-pointer items-center justify-center text-xl"
               onClick={() => navigate("/upload")}
+              type="button"
             >
               {document.referrer.includes("/redirect")
                 ? "No images found, please upload your image (click here)"
                 : "No images match, please upload a different image (click here)"}
-            </div>
+            </button>
           )}
         </div>
       ) : (

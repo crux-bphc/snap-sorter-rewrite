@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
 import { useAuth } from "./auth-context";
 import { Link } from "react-router-dom";
 
@@ -34,6 +35,7 @@ const Navbar: React.FC = () => {
         <button
           className="text-foreground focus:outline-none md:hidden"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
+          type="button"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -42,6 +44,7 @@ const Navbar: React.FC = () => {
             stroke="currentColor"
             className="h-6 w-6"
           >
+            <title>Menu</title>
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -53,7 +56,7 @@ const Navbar: React.FC = () => {
       </div>
 
       {isMenuOpen && (
-        <div className="absolute right-4 top-14 z-50 bg-background px-4 py-4 text-right text-foreground shadow-lg">
+        <div className="absolute right-4 top-14 z-50 flex flex-col border bg-background px-4 py-4 text-right text-foreground shadow-lg">
           <Link to="/upload" className="py-2 uppercase hover:text-gray-400">
             Search
           </Link>
